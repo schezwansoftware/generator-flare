@@ -2,8 +2,12 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
+const mkdirp = require('mkdirp');
 const packagejs = require(__dirname + '/../../package.json');
 const questions = 5;
+const serverBasePath = 'server';
+const clientBasePath = 'client';
+const dockerBasePath = 'docker';
 
 
 module.exports = class extends Generator {
@@ -85,14 +89,19 @@ module.exports = class extends Generator {
     return this.prompt(prompts).then(props => {
       // To access props later use this.props.someAnswer;
       this.props = props;
-      console.log(`App name is ${this.props.appName} and service type is ${this.props.appType}`);
+
     });
   }
 
   writing() {
-    this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
+    const {appName, appType, authenticationType, databaseType} = this.props;
+    mkdirp(appName);
+    const basePath = appName + '/';
+    const templateDockerBasePath = 'docker';
+    this.fs.copyTpl(
+      this.templatePath(templateDockerBasePath),
+      this.destinationPath(basePath + dockerBasePath),
+      {appName}
     );
   }
 
