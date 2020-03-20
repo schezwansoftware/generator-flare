@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ff05438-541c-47ab-a60a-1f2a8cb7dff8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.interface.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.mapper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.mapper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generators/app/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +11,21 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/generators/app/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="17" column="27" selection-start-line="17" selection-start-column="27" selection-end-line="17" selection-end-column="27" />
+              <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+              <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
+              <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+              <caret line="21" column="27" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/generators/app/templates/server/package.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
@@ -42,8 +47,8 @@
         <option value="$PROJECT_DIR$/generators/app/templates/docker/mongodb/_docker-compose.yml.ejs" />
         <option value="$PROJECT_DIR$/generators/app/templates/server/src/app.module.ts" />
         <option value="$PROJECT_DIR$/generators/app/templates/server/.env" />
-        <option value="$PROJECT_DIR$/generators/app/index.js" />
         <option value="$PROJECT_DIR$/generators/app/templates/server/package.json" />
+        <option value="$PROJECT_DIR$/generators/app/index.js" />
       </list>
     </option>
   </component>
@@ -59,6 +64,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -77,26 +83,10 @@
               <item name="generators" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="generator-flare" type="b2602c69:ProjectViewProjectNode" />
-              <item name="generator-flare" type="462c0819:PsiDirectoryNode" />
-              <item name="generators" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="generator-flare" type="b2602c69:ProjectViewProjectNode" />
-              <item name="generator-flare" type="462c0819:PsiDirectoryNode" />
-              <item name="generators" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -147,17 +137,18 @@
       <workItem from="1584686664405" duration="6991000" />
       <workItem from="1584693675031" duration="3004000" />
       <workItem from="1584732452107" duration="55000" />
+      <workItem from="1584733016294" duration="68000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10050000" />
+    <option name="totallyTimeSpent" value="10118000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="52" width="1301" height="716" extended-state="6" />
+    <frame x="65" y="24" width="1301" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25737053" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2613546" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -257,17 +248,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/generators/app/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="125" selection-start-line="125" selection-end-line="125" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/generators/app/templates/server/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="39" column="30" selection-start-line="39" selection-start-column="30" selection-end-line="39" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generators/app/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="17" column="27" selection-start-line="17" selection-start-column="27" selection-end-line="17" selection-end-column="27" />
+          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+          <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
+          <caret line="20" column="27" selection-start-line="20" selection-start-column="27" selection-end-line="20" selection-end-column="27" />
+          <caret line="21" column="27" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
         </state>
       </provider>
     </entry>
