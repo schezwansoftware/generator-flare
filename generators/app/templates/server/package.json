@@ -1,7 +1,7 @@
 {
-  "name": "flare",
+  "name": "<%= appName %>",
   "version": "0.0.1",
-  "description": "",
+  "description": "Description For <%= appName %>",
   "author": "",
   "license": "MIT",
   "scripts": {

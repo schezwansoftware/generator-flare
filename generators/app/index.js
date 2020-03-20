@@ -3,11 +3,13 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 const mkdirp = require('mkdirp');
+const path = require('path');
 const packagejs = require(__dirname + '/../../package.json');
 const questions = 5;
 const serverBasePath = 'server';
 const clientBasePath = 'client';
 const dockerBasePath = 'docker';
+let baseAppPath = '';
 
 
 module.exports = class extends Generator {
@@ -46,6 +48,16 @@ module.exports = class extends Generator {
         ],
       },
       {
+        type: 'input',
+        name: 'appPort',
+        message: 'Your service port?',
+        default:  '5000',
+        validate: (value) => {
+          const regex = new RegExp(/[0-9]/g);
+          return regex.test(value);
+        }
+      },
+      {
         type: 'list',
         name: 'authenticationType',
         message: '(3/' + questions + ') Which *type* of authentication would you like to use?',
@@ -82,30 +94,50 @@ module.exports = class extends Generator {
             name: 'Cassandra'
           }
         ],
-        default: 0
+        default: 'mongo'
       }
     ];
 
     return this.prompt(prompts).then(props => {
       // To access props later use this.props.someAnswer;
       this.props = props;
+      baseAppPath = this.props.appName;
 
     });
   }
 
   writing() {
-    const {appName, appType, authenticationType, databaseType} = this.props;
+    const {appName, appType, authenticationType, databaseType, appPort} = this.props;
     mkdirp(appName);
-    const basePath = appName + '/';
     const templateDockerBasePath = 'docker';
+    const templateServerBasePath = 'server';
+    const basePath = appName + '/';
     this.fs.copyTpl(
       this.templatePath(templateDockerBasePath),
       this.destinationPath(basePath + dockerBasePath),
       {appName}
     );
+
+    this.fs.copyTpl(
+      this.templatePath(serverBasePath + '/.env'),
+      this.destinationPath(basePath + serverBasePath + '/.env'),
+      {appName, appPort}
+    );
+
+    this.fs.copyTpl(
+      this.templatePath(templateServerBasePath),
+      this.destinationPath(basePath + serverBasePath),
+      {appName, appPort}
+    );
   }
 
   install() {
-    this.installDependencies();
+    var elementDir = process.cwd() + '/' + baseAppPath + '/' + serverBasePath;
+    process.chdir(elementDir);
+    this.installDependencies({
+      npm: false,
+      bower: false,
+      yarn: true
+    });
   }
 };
