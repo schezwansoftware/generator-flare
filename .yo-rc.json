@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Schezwan Software",
+      "authorEmail": "harshitb95@gmail.com",
+      "authorUrl": ""
+    }
+  }
+}
