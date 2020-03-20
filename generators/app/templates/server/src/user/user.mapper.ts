@@ -11,11 +11,19 @@ export class UserMapper {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            password: user.password,
+            password: null,
             login: user.login,
             authorities: user.authorities,
             resetKey: user.resetKey,
             resetDate: user.resetDate,
         };
+    }
+
+    mapUserToUserDTOList(users: User[]): UserDTO[] {
+        const userDTOs: UserDTO[] = [];
+        for (const user of users) {
+            userDTOs.push(this.mapUserToUserDTO(user));
+        }
+        return userDTOs;
     }
 }

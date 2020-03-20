@@ -3,13 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="4ff05438-541c-47ab-a60a-1f2a8cb7dff8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/dummyfile.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/generators/app/templates/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/app.controller.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/app.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/app.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.interface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.mapper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.mapper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/generators/app/templates/server/src/user/user.service.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,21 +19,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/generators/app/index.js">
+        <entry file="file://$PROJECT_DIR$/generators/app/templates/server/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="124" selection-start-line="124" selection-end-line="124" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/generators/app/templates/server/.env">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="50" lean-forward="true" selection-start-line="1" selection-start-column="50" selection-end-line="1" selection-end-column="50" />
+            <state relative-caret-position="270">
+              <caret line="39" column="30" selection-start-line="39" selection-start-column="30" selection-end-line="39" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -48,10 +40,10 @@
         <option value="$PROJECT_DIR$/generators/app/abc.txt" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/generators/app/templates/docker/mongodb/_docker-compose.yml.ejs" />
-        <option value="$PROJECT_DIR$/generators/app/templates/server/package.json" />
         <option value="$PROJECT_DIR$/generators/app/templates/server/src/app.module.ts" />
         <option value="$PROJECT_DIR$/generators/app/templates/server/.env" />
         <option value="$PROJECT_DIR$/generators/app/index.js" />
+        <option value="$PROJECT_DIR$/generators/app/templates/server/package.json" />
       </list>
     </option>
   </component>
@@ -66,7 +58,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -93,10 +84,19 @@
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="generator-flare" type="b2602c69:ProjectViewProjectNode" />
+              <item name="generator-flare" type="462c0819:PsiDirectoryNode" />
+              <item name="generators" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -145,25 +145,25 @@
       <option name="presentableId" value="Default" />
       <updated>1584686662902</updated>
       <workItem from="1584686664405" duration="6991000" />
-      <workItem from="1584693675031" duration="2180000" />
+      <workItem from="1584693675031" duration="3004000" />
+      <workItem from="1584732452107" duration="55000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9171000" />
+    <option name="totallyTimeSpent" value="10050000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1301" height="744" extended-state="6" />
+    <frame x="65" y="52" width="1301" height="716" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25338647" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25737053" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="TypeScript" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -176,6 +176,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="bottom" id="TypeScript" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -224,27 +225,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/generators/app/templates/server/src/app.service.ts">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/generators/app/templates/server/src/app.controller.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/generators/app/templates/server/src/app.controller.spec.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/generators/app/templates/server/src/app.service.ts" />
+    <entry file="file://$PROJECT_DIR$/generators/app/templates/server/src/app.controller.ts" />
+    <entry file="file://$PROJECT_DIR$/generators/app/templates/server/src/app.controller.spec.ts" />
     <entry file="file://$PROJECT_DIR$/generators/app/templates/server/src/main.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -264,27 +247,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/generators/app/templates/server/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/generators/app/templates/server/nest-cli.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/generators/app/templates/server/.env">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
-          <caret line="1" column="50" lean-forward="true" selection-start-line="1" selection-start-column="50" selection-end-line="1" selection-end-column="50" />
+          <caret line="1" column="50" selection-start-line="1" selection-start-column="50" selection-end-line="1" selection-end-column="50" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/generators/app/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="124" selection-start-line="124" selection-end-line="124" />
+        <state relative-caret-position="330">
+          <caret line="125" selection-start-line="125" selection-end-line="125" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/generators/app/templates/server/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="39" column="30" selection-start-line="39" selection-start-column="30" selection-end-line="39" selection-end-column="30" />
         </state>
       </provider>
     </entry>

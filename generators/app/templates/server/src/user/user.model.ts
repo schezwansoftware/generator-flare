@@ -1,4 +1,6 @@
 import * as mongoose from 'mongoose';
+import * as bcrypt from 'bcrypt';
+import {User} from './user.interface';
 
 export const UserSchema = new mongoose.Schema({
     firstName: {type: String, min: 5},
@@ -10,3 +12,11 @@ export const UserSchema = new mongoose.Schema({
     resetKey: String,
     resetDate: {type: String, default: Date.now()},
 });
+
+
+// tslint:disable-next-line:only-arrow-functions
+UserSchema.pre<User>('save', function(next) {
+    this.password = bcrypt.hashSync(this.password, 10)
+    next();
+});
+

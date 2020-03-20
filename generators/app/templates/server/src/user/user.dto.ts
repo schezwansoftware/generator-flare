@@ -3,11 +3,11 @@ import {IsEmail, IsNotEmpty, MaxLength, Min, MinLength} from 'class-validator';
 export class UserDTO {
     readonly id: string;
 
-    @MinLength(5)
+    @MinLength(3)
     @MaxLength(100)
     readonly firstName: string;
 
-    @MinLength(5)
+    @MinLength(3)
     @MaxLength(100)
     readonly lastName: string;
 

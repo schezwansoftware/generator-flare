@@ -14,4 +14,27 @@ export class UserRepository {
         return newUser.save();
     }
 
+    async update(userDTO: UserDTO): Promise<User> {
+        return await this.userModel.findByIdAndUpdate(userDTO.id, userDTO , {new: true});
+    }
+
+    async findAll(): Promise<User[]> {
+        return await this.userModel.find();
+    }
+
+    async findById(id: string): Promise<User> {
+        return await this.userModel.findById(id);
+    }
+
+    async deleteById(id: string): Promise<void> {
+       await this.userModel.findByIdAndDelete(id);
+    }
+
+    async findByEmail(email: string): Promise<User> {
+        return await this.userModel.findOne({email});
+    }
+
+    async findByLogin(login: string): Promise<User> {
+        return await this.userModel.findOne({login});
+    }
 }
