@@ -11,11 +11,8 @@ export class UserMapper {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            password: null,
             login: user.login,
             authorities: user.authorities,
-            resetKey: user.resetKey,
-            resetDate: user.resetDate,
         };
     }
 
@@ -25,11 +22,11 @@ export class UserMapper {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            password: user.password,
+            password: null,
             login: user.login,
             authorities: user.authorities,
-            resetKey: user.resetKey,
-            resetDate: user.resetDate,
+            resetKey: null,
+            resetDate: null,
         };
     }
 

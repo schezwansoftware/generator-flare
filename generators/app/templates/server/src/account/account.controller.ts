@@ -4,6 +4,7 @@ import {JWTToken} from '../auth/jwt/token.model';
 import {AccountService} from './account.service';
 import {UserDTO} from '../user/user.dto';
 import {Public} from '../auth/decorators/public.decorator';
+import {ManagedUserVM} from './managed-user.dto';
 
 @Controller('api')
 export class AccountController {
@@ -11,9 +12,17 @@ export class AccountController {
     constructor(private accountService: AccountService) {
     }
 
+    @Post('register')
+    @Public()
+    async register(@Res() res, @Body() managedUserVM: ManagedUserVM) {
+        await this.accountService.register(managedUserVM, managedUserVM.password);
+        return res.status(HttpStatus.CREATED).json({
+            message: 'User has been registered.',
+        });
+    }
     @Post('authenticate')
     @Public()
-    async createUser(@Res() res, @Body() loginVM: LoginVM) {
+    async authenticate(@Res() res, @Body() loginVM: LoginVM) {
         const result: JWTToken = await this.accountService.authenticate(loginVM);
         return res.status(HttpStatus.OK).json({
             result,

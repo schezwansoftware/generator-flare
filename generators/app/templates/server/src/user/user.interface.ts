@@ -6,10 +6,10 @@ export interface IUser {
     readonly lastName: string;
     readonly email: string;
     readonly login: string;
-    readonly password: string;
     readonly authorities: string[];
-    readonly resetDate: Date;
-    readonly resetKey: string;
+    resetDate: Date;
+    resetKey: string;
+    password: string;
 }
 
 export class User extends Document implements IUser {

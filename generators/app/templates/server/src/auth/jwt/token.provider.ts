@@ -4,11 +4,12 @@ import {UserService} from '../../user/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {JWTToken} from './token.model';
 import {JWT_EXPIRY_TIME_IN_SECONDS} from '../../app.constants';
+import {UserRepository} from '../../user/user.repository';
 
 @Injectable()
 export class TokenProvider {
 
-    constructor(private userService: UserService, private readonly jwtService: JwtService) {
+    constructor(private userRepository: UserRepository, private readonly jwtService: JwtService) {
     }
 
     createToken(user: IUser): JWTToken {
@@ -22,6 +23,6 @@ export class TokenProvider {
     }
 
     async validateToken(payload: any): Promise<IUser> {
-        return await this.userService.findOneWithAuthoritiesByEmail(payload.email);
+        return await this.userRepository.findByEmail(payload.email);
     }
 }

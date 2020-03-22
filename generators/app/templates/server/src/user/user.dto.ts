@@ -1,36 +1,26 @@
 import {IsEmail, IsNotEmpty, MaxLength, Min, MinLength} from 'class-validator';
 
 export class UserDTO {
-    readonly id: string;
+    id: string;
 
     @MinLength(3)
     @MaxLength(100)
-    readonly firstName: string;
+    firstName: string;
 
     @MinLength(3)
     @MaxLength(100)
-    readonly lastName: string;
+    lastName: string;
 
     @IsEmail()
     @IsNotEmpty()
     @MinLength(5)
     @MaxLength(100)
-    readonly email: string;
-
-    @IsNotEmpty()
-    @MinLength(5)
-    @MaxLength(20)
-    readonly login: string;
+    email: string;
 
     @IsNotEmpty()
     @MinLength(4)
-    @MaxLength(100)
-    readonly password: string;
+    @MaxLength(20)
+    login: string;
 
-    @IsNotEmpty()
-    readonly authorities: string[];
-
-    readonly resetDate: Date;
-
-    readonly resetKey: string;
+    authorities: string[];
 }

@@ -8,15 +8,23 @@ import {IUser} from '../user/user.interface';
 import * as bcrypt from 'bcrypt';
 import {is} from '@babel/types';
 import {SecurityUtils} from '../auth/security/security.utils';
+import {USER} from '../auth/security/authority.constants';
+import {MailerService} from '@nestjs-modules/mailer';
+import {MAIL_FROM} from '../app.constants';
+import {MailService} from '../shared/services/mail.service';
 
 @Injectable()
 export class AccountService {
 
-    constructor(private userService: UserService, private tokenProvider: TokenProvider) {
+    constructor(private userService: UserService, private tokenProvider: TokenProvider, private mailService: MailService) {
     }
 
-    async register(accontDTO: UserDTO): Promise<UserDTO> {
-        return await this.userService.createNew(accontDTO);
+    async register(userDTO: UserDTO, password: string): Promise<void> {
+        if (!userDTO.authorities || userDTO.authorities.length === 0) {
+            userDTO.authorities = [USER];
+        }
+        const user = await this.userService.registerUser(userDTO, password);
+        this.mailService.sendCreationEmail(user);
     }
 
     async authenticate(loginVM: LoginVM): Promise<JWTToken> {

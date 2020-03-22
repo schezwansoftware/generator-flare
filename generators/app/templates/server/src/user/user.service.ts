@@ -3,21 +3,50 @@ import {UserRepository} from './user.repository';
 import {UserDTO} from './user.dto';
 import {UserMapper} from './user.mapper';
 import {IUser} from './user.interface';
+import * as randomString from 'randomstring';
+import {USER} from '../auth/security/authority.constants';
 
 @Injectable()
 export class UserService {
 
-    constructor(private userRepository: UserRepository, private userMapper: UserMapper) {}
+    constructor(private userRepository: UserRepository, private userMapper: UserMapper) {
+    }
 
-   async createNew(userDTO: UserDTO): Promise<UserDTO> {
+    async createNew(userDTO: UserDTO): Promise<UserDTO> {
         if (await this.userRepository.findByEmail(userDTO.email)) {
             throw new BadRequestException('A User is already registered with this email');
         }
         if (await this.userRepository.findByLogin(userDTO.login)) {
             throw new BadRequestException('A User is already registered with this login');
         }
-        const user = await this.userRepository.save(this.userMapper.mapUserDTOToUser(userDTO));
+        if (!userDTO.authorities || userDTO.authorities.length === 0) {
+            userDTO.authorities = [USER];
+        }
+        let user: IUser = this.userMapper.mapUserDTOToUser(userDTO);
+        user.password = randomString.generate({
+            length: 20,
+            charset: 'alphanumeric',
+        });
+        user.resetKey = randomString.generate({
+           length: 15,
+           charset: 'alphanumeric',
+        });
+        user.resetDate = new Date();
+        user = await this.userRepository.save(user);
         return this.userMapper.mapUserToUserDTO(user);
+    }
+
+    async registerUser(userDTO: UserDTO, password: string): Promise<IUser> {
+        if (await this.userRepository.findByEmail(userDTO.email)) {
+            throw new BadRequestException('A User is already registered with this email');
+        }
+        if (await this.userRepository.findByLogin(userDTO.login)) {
+            throw new BadRequestException('A User is already registered with this login');
+        }
+        let user: IUser = this.userMapper.mapUserDTOToUser(userDTO);
+        user.password = password;
+        user = await this.userRepository.save(user);
+        return user;
     }
 
     async updateUser(userDTO: UserDTO): Promise<UserDTO> {
@@ -29,9 +58,14 @@ export class UserService {
         if (existingUser && existingUser.id !== userDTO.id) {
             throw new BadRequestException('A User is already registered with this user');
         }
-        const user: IUser = await this.userRepository.update(this.userMapper.mapUserDTOToUser(userDTO));
-        if (user) {
-            return this.userMapper.mapUserToUserDTO(user);
+        existingUser = await this.userRepository.findById(userDTO.id);
+        if (existingUser) {
+            let newUser: IUser = this.userMapper.mapUserDTOToUser(userDTO);
+            newUser.password = existingUser.password;
+            newUser.resetDate = existingUser.resetDate;
+            newUser.resetKey = existingUser.resetKey;
+            newUser = await this.userRepository.save(newUser);
+            return this.userMapper.mapUserToUserDTO(newUser);
         }
         throw new BadRequestException('Invalid id.');
     }
@@ -70,7 +104,7 @@ export class UserService {
     }
 
     async deleteUser(id: string): Promise<void> {
-      return await this.userRepository.deleteById(id);
+        return await this.userRepository.deleteById(id);
     }
 
 }
