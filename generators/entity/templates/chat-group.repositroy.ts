@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
-import {ChatGroup, IChatGroup} from './chat-group.interface';
+import {ChatGroup, IChatGroup} from './_interface.ts.ejs';
 
 @Injectable()
 export class ChatGroupRepositroy {

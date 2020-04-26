@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {ChatGroupDTO} from '../../shared/dto/chat-group.DTO';
-import {IChatGroup} from './chat-group.interface';
+import {IChatGroup} from './_interface.ts.ejs';
 import {SecurityUtils} from '../../auth/security/security.utils';
 
 @Injectable()
