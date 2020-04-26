@@ -10,6 +10,7 @@ const serverBasePath = 'server';
 const clientBasePath = 'client';
 const dockerBasePath = 'docker';
 const fileSystem = require('fs');
+const entityConfigBase = '.flare';
 let baseAppPath = '';
 let fields = [];
 
@@ -26,6 +27,14 @@ module.exports = class extends Generator {
     }
     // And you can then access it later; e.g.
     this.entityName = this.options.entityName;
+    const entityNameCapitalized = this._capitalizeFirstLetter(this.entityName);
+    const entityConfigBasePath = this.destinationPath() + "/" + entityConfigBase;
+    if (!fileSystem.existsSync(entityConfigBasePath)) {
+      fileSystem.mkdirSync(entityConfigBasePath);
+    }
+    this.entityConfigBasePath = entityConfigBasePath + '/' + entityNameCapitalized + '.json';
+    this.useConfigurationFile = fileSystem.existsSync(this.entityConfigBasePath);
+
   };
   initializing() {
       this.log(' \n' +
@@ -36,10 +45,15 @@ module.exports = class extends Generator {
         chalk.green('      ██') + chalk.red('      ████████') + chalk.yellow(' ██    ██ ') + chalk.blue(' ██      ██ ') + chalk.magenta(' ███████       \n') + ''
       );
       this.log(chalk.white('Welcome to the Flare Generator ') + chalk.yellow('v' + packagejs.version + '\n'));
+
+      if (!this.useConfigurationFile) {
+        this.generatedFields = [];
+      } else {
+        this._loadJson();
+      }
   }
   prompting() {
     // Have Yeoman greet the user.
-    this.generatedFields = [];
     const fieldsPrompts = [
       {
         type: 'confirm',
@@ -141,6 +155,7 @@ module.exports = class extends Generator {
       this.destinationPath(entitydir + "/" + entityInterface),
       { entityClassName: entityClassName, generatedFields: this.generatedFields }
     );
+    this._cpEntityConfig();
   }
 
   install() {
@@ -159,6 +174,24 @@ module.exports = class extends Generator {
 
   _convertToDashCase(string) {
     return string.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
+  }
+
+  _cpEntityConfig() {
+    const fieldData = this.generatedFields;
+    const data = { fieldData };
+    fileSystem.writeFileSync(this.entityConfigBasePath, JSON.stringify(data));
+  }
+
+  _loadJson() {
+    try {
+      this.fileData = this.fs.readJSON(this.entityConfigBasePath);
+      this.generatedFields = this.fileData.fieldData;
+      for (const field of this.generatedFields) {
+        this.log(chalk.red(`${field.fieldName}: ${field.fieldType}`));
+      }
+    } catch (err) {
+      this.error(chalk.red('\nThe entity configuration file could not be read!\n'));
+    }
   }
 
 };
