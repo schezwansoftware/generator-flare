@@ -94,7 +94,7 @@ module.exports = class extends Generator {
             name: 'Cassandra'
           }
         ],
-        default: 'mongo'
+        default: 'mongodb'
       }
     ];
 
