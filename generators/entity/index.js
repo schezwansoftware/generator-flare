@@ -9,6 +9,7 @@ const questions = 5;
 const serverBasePath = 'server';
 const clientBasePath = 'client';
 const dockerBasePath = 'docker';
+const fileSystem = require('fs');
 let baseAppPath = '';
 let fields = [];
 
@@ -134,11 +135,22 @@ module.exports = class extends Generator {
 
   writing() {
     const entityBasePath = this.destinationPath() + "/server/src/entity";
-    console.log(entityBasePath);
+    const entityClassName = this._capitalizeFirstLetter(this.entityName);
+    const entityController = `${this.entityName}.controller.ts`;
+    const entityService = `${this.entityName}.service.ts`;
+    const entityInterface = `${this.entityName}.interface.ts`;
+    const entityModule = `${this.entityName}.controller.ts`;
+    const entityModel = `${this.entityName}.model.ts`;
+    const entityRepository = `${this.entityName}.repository.ts`;
+    const entitydir = entityBasePath + "/" + this.entityName;
+    if (!fileSystem.existsSync(entitydir)) {
+      fileSystem.mkdirSync(entitydir);
+    }
+    this.destinationRoot(entitydir);
     this.fs.copyTpl(
       this.templatePath("_entity.ts.ejs"),
-      this.destinationPath("./entity.ts"),
-      { entityName: this.entityName, generatedFields: this.generatedFields }
+      this.destinationPath(entityModel),
+      { entityName: entityClassName, generatedFields: this.generatedFields }
     );
   }
 
@@ -150,6 +162,10 @@ module.exports = class extends Generator {
     //   bower: false,
     //   yarn: true
     // });
+  }
+
+  _capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
 };
