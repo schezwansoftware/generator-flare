@@ -35,6 +35,7 @@ module.exports = class extends Generator {
   }
   prompting() {
     // Have Yeoman greet the user.
+    this.generatedFields = [];
     const fieldsPrompts = [
       {
         type: 'confirm',
@@ -63,13 +64,64 @@ module.exports = class extends Generator {
           return true;
         },
         message: 'What is the name of your field?'
-      }
+      },
+      {
+        when: function (response) {
+          return response.fieldAdd === true;
+        },
+        type: 'list',
+        name: 'fieldType',
+        message: 'What is the type of your field?',
+        choices: [
+          {
+            value: 'String',
+            name: 'String'
+          },
+          {
+            value: 'Integer',
+            name: 'Integer'
+          },
+          {
+            value: 'Long',
+            name: 'Long'
+          },
+          {
+            value: 'Float',
+            name: 'Float'
+          },
+          {
+            value: 'Double',
+            name: 'Double'
+          },
+          {
+            value: 'BigDecimal',
+            name: 'BigDecimal'
+          },
+          {
+            value: 'LocalDate',
+            name: 'LocalDate'
+          },
+          {
+            value: 'ZonedDateTime',
+            name: 'ZonedDateTime'
+          },
+          {
+            value: 'Boolean',
+            name: 'Boolean'
+          },
+        ],
+        default: 0
+      },
     ];
 
     const promise = (relevantPrompts) => {
       return this.prompt(relevantPrompts).then(props => {
         // To access props later use this.props.someAnswer;
-        this.props = props;
+        if (props.fieldAdd) {
+          const { fieldName, fieldType } = props;
+          const field = {fieldName, fieldType};
+          this.generatedFields.push(field);
+        }
         return props.fieldAdd ? promise(fieldsPrompts) : this.prompt([]);
       });
     };
@@ -78,7 +130,7 @@ module.exports = class extends Generator {
   }
 
   writing() {
-
+    console.log(this.generatedFields);
   }
 
   install() {
