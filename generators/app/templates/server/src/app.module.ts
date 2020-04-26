@@ -6,6 +6,7 @@ import { AccountModule } from './account/account.module';
 import { AuthModule } from './auth/auth.module';
 import {MailerModule, PugAdapter} from '@nestjs-modules/mailer';
 import { SharedModule } from './shared/shared.module';
+import { EntityModule } from './entity/entity.module';
 
 
 @Module({
@@ -35,6 +36,7 @@ import { SharedModule } from './shared/shared.module';
       }),
       UserModule,
       AccountModule,
+      EntityModule,
       AuthModule,
       SharedModule,
   ],

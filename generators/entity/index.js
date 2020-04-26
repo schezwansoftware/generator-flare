@@ -19,9 +19,12 @@ module.exports = class extends Generator {
 
     // This makes `appname` a required argument.
     this.argument("entityName", { type: String, required: true });
-
+    this.appName = this.config.get('appName');
+    if (!this.appName) {
+      throw new Error("Folder is Not recognized as a valid Flare Project.")
+    }
     // And you can then access it later; e.g.
-    this.log(this.options.entityName);
+    this.entityName = this.options.entityName;
   };
   initializing() {
       this.log(' \n' +
@@ -130,7 +133,13 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    console.log(this.generatedFields);
+    const entityBasePath = this.destinationPath() + "/server/src/entity";
+    console.log(entityBasePath);
+    this.fs.copyTpl(
+      this.templatePath("_entity.ts.ejs"),
+      this.destinationPath("./entity.ts"),
+      { entityName: this.entityName, generatedFields: this.generatedFields }
+    );
   }
 
   install() {
