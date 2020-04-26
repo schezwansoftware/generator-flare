@@ -82,32 +82,16 @@ module.exports = class extends Generator {
             name: 'String'
           },
           {
-            value: 'Integer',
-            name: 'Integer'
+            value: 'Number',
+            name: 'Number'
           },
           {
-            value: 'Long',
-            name: 'Long'
+            value: 'ObjectId',
+            name: 'ObjectId'
           },
           {
-            value: 'Float',
-            name: 'Float'
-          },
-          {
-            value: 'Double',
-            name: 'Double'
-          },
-          {
-            value: 'BigDecimal',
-            name: 'BigDecimal'
-          },
-          {
-            value: 'LocalDate',
-            name: 'LocalDate'
-          },
-          {
-            value: 'ZonedDateTime',
-            name: 'ZonedDateTime'
+            value: 'DateTime',
+            name: 'Date'
           },
           {
             value: 'Boolean',
@@ -146,11 +130,10 @@ module.exports = class extends Generator {
     if (!fileSystem.existsSync(entitydir)) {
       fileSystem.mkdirSync(entitydir);
     }
-    this.destinationRoot(entitydir);
     this.fs.copyTpl(
-      this.templatePath("_entity.ts.ejs"),
-      this.destinationPath(entityModel),
-      { entityName: entityClassName, generatedFields: this.generatedFields }
+      this.templatePath("_model.ts.ejs"),
+      this.destinationPath(entitydir + "/" + entityModel),
+      { entityClassName: entityClassName, generatedFields: this.generatedFields }
     );
   }
 

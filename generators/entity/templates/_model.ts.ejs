@@ -1,0 +1,10 @@
+import * as mongoose from 'mongoose';
+
+export const <%= entityClassName %>Schema = new mongoose.Schema({
+    <% for (const field of generatedFields) { %>
+        <%= field.fieldName %>: {type: mongoose.SchemaTypes.<%= field.fieldType%>, required: <%= field.requiredField ? 'true': 'false'%>},
+    <% } %>
+});
+
+
+
