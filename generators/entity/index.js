@@ -120,13 +120,14 @@ module.exports = class extends Generator {
   writing() {
     const entityBasePath = this.destinationPath() + "/server/src/entity";
     const entityClassName = this._capitalizeFirstLetter(this.entityName);
-    const entityController = `${this.entityName}.controller.ts`;
-    const entityService = `${this.entityName}.service.ts`;
-    const entityInterface = `${this.entityName}.interface.ts`;
-    const entityModule = `${this.entityName}.controller.ts`;
-    const entityModel = `${this.entityName}.model.ts`;
-    const entityRepository = `${this.entityName}.repository.ts`;
-    const entitydir = entityBasePath + "/" + this.entityName;
+    const baseName = this._convertToDashCase(this.entityName);
+    const entityController = `${baseName}.controller.ts`;
+    const entityService = `${baseName}.service.ts`;
+    const entityInterface = `${baseName}.interface.ts`;
+    const entityModule = `${baseName}.controller.ts`;
+    const entityModel = `${baseName}.model.ts`;
+    const entityRepository = `${baseName}.repository.ts`;
+    const entitydir = entityBasePath + "/" + baseName;
     if (!fileSystem.existsSync(entitydir)) {
       fileSystem.mkdirSync(entitydir);
     }
@@ -149,6 +150,10 @@ module.exports = class extends Generator {
 
   _capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  _convertToDashCase(string) {
+    return string.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
   }
 
 };
