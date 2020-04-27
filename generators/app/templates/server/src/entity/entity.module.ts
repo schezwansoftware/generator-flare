@@ -1,6 +1,11 @@
 import {Module} from '@nestjs/common';
 
+// Flare writing content --- flare will use it to inject module paths
+
 @Module({
-    imports: [],
+  imports: [
+// Flare writing content --- flare will use it to inject modules
+  ],
 })
-export class EntityModule {}
+export class EntityModule {
+}

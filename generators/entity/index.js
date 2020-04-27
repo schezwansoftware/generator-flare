@@ -15,6 +15,8 @@ const fileSystem = require('fs');
 const entityConfigBase = '.flare';
 let baseAppPath = '';
 let fields = [];
+const injectorModuleRegexp = '// Flare writing content --- flare will use it to inject modules';
+const injectorModulePathRegexp = '// Flare writing content --- flare will use it to inject module paths';
 
 module.exports = class extends Generator {
   // note: arguments and options should be defined in the constructor.
@@ -74,6 +76,7 @@ module.exports = class extends Generator {
     const entityMapper = `${baseName}.mapper.ts`;
     const entityDTO = `${baseName}.DTO.ts`;
     const entityModule = `${baseName}.module.ts`;
+    const entityModuleName = `${entityClassName}Module`;
     const entityModel = `${baseName}.model.ts`;
     const entityRepository = `${baseName}.repository.ts`;
     const entitydir = entityBasePath + "/" + baseName;
@@ -125,6 +128,25 @@ module.exports = class extends Generator {
       this.destinationPath(entitydir + "/" + entityModule),
       { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl }
     );
+    const entityBaseModulePath = entityBasePath + "/entity.module.ts";
+    if (fileSystem.existsSync(entityBaseModulePath)) {
+      this.fs.copy(entityBaseModulePath, entityBaseModulePath, {
+        process: function(content) {
+
+          /* Any modification goes here. Note that contents is a Buffer object */
+          if (!content.toString().includes(entityModuleName)) {
+            let regEx = new RegExp(injectorModuleRegexp, 'g');
+            let replaceString = entityModuleName + "," + "\n" + injectorModuleRegexp;
+            let newContent = content.toString().replace(regEx, replaceString);
+            regEx = new RegExp(injectorModulePathRegexp, 'g');
+            replaceString = `import {${entityModuleName}} from './${baseName}/${baseName}.module';\n${injectorModulePathRegexp}`;
+            newContent = newContent.replace(injectorModulePathRegexp, replaceString);
+            return newContent;
+          }
+          return content;
+        }.bind(this)
+      });
+    }
     this._cpEntityConfig();
   }
 
