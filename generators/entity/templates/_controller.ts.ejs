@@ -1,0 +1,52 @@
+import {BadRequestException, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {<%= entityClassName %>Service} from './<%= entityBaseFileName %>.service';
+import {<%= entityClassName %>DTO} from './<%= entityBaseFileName %>.DTO';
+import * as mongoose from 'mongoose';
+
+
+@Controller('api')
+export class <%= entityClassName %>Controller {
+
+    constructor(private <%= entityName %>Service: <%= entityClassName %>Service) {
+    }
+
+    @Post('<%= entityAPIUrl %>')
+    async create(<%= entityName %>DTO: <%= entityClassName %>DTO): Promise<<%= entityClassName %>DTO> {
+        if (<%= entityName %>DTO.id) {
+        throw new BadRequestException('A new <%= entityName %> cannot already have an Id');
+        }
+        return await this.<%= entityName %>Service.save(<%= entityName %>DTO);
+    }
+
+    @Put('<%= entityAPIUrl %>')
+    async update(<%= entityName %>DTO: <%= entityClassName %>DTO): Promise<<%= entityClassName %>DTO> {
+        if (!<%= entityName %>DTO.id) {
+            throw new BadRequestException('A <%= entityName %> must have an Id');
+        }
+        if (<%= entityName %>DTO.id && !mongoose.Types.ObjectId.isValid(<%= entityName %>DTO.id)) {
+            throw new BadRequestException('Invalid Id.');
+        }
+        return await this.<%= entityName %>Service.update(<%= entityName %>DTO);
+    }
+
+    @Get('<%= entityAPIUrl %>')
+    async getAll(): Promise<<%= entityClassName %>DTO[]> {
+        return await this.<%= entityName %>Service.findAll();
+    }
+
+    @Get('<%= entityAPIUrl %>/:id')
+    async getOne(@Param('id') id: string): Promise<<%= entityClassName %>DTO> {
+        if (id && !mongoose.Types.ObjectId.isValid(id)) {
+            throw new BadRequestException('Invalid Id.');
+        }
+            return await this.<%= entityName %>Service.findById(id);
+    }
+
+    @Delete('<%= entityAPIUrl %>/:id')
+    async delete(@Param('id') id: string): Promise<void> {
+        if (id && !mongoose.Types.ObjectId.isValid(id)) {
+            throw new BadRequestException('Invalid Id.');
+        }
+        return await this.<%= entityName %>Service.deleteById(id);
+    }
+}

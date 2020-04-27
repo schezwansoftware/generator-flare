@@ -3,6 +3,8 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 const mkdirp = require('mkdirp');
+const _ = require('lodash');
+const pluralize = require('pluralize');
 const path = require('path');
 const packagejs = require(__dirname + '/../../package.json');
 const questions = 5;
@@ -27,7 +29,7 @@ module.exports = class extends Generator {
     }
     // And you can then access it later; e.g.
     this.entityName = this.options.entityName;
-    const entityNameCapitalized = this._capitalizeFirstLetter(this.entityName);
+    const entityNameCapitalized = _.upperFirst(this.entityName);
     const entityConfigBasePath = this.destinationPath() + "/" + entityConfigBase;
     if (!fileSystem.existsSync(entityConfigBasePath)) {
       fileSystem.mkdirSync(entityConfigBasePath);
@@ -63,8 +65,9 @@ module.exports = class extends Generator {
 
   writing() {
     const entityBasePath = this.destinationPath() + "/server/src/entity";
-    const entityClassName = this._capitalizeFirstLetter(this.entityName);
-    const baseName = this._convertToDashCase(this.entityName);
+    const entityClassName = _.upperFirst(this.entityName);
+    const baseName = _.kebabCase(this.entityName);
+    const entityAPIUrl = _.kebabCase(pluralize(this.entityName));
     const entityController = `${baseName}.controller.ts`;
     const entityService = `${baseName}.service.ts`;
     const entityInterface = `${baseName}.interface.ts`;
@@ -105,10 +108,17 @@ module.exports = class extends Generator {
       this.destinationPath(entitydir + "/" + entityDTO),
       { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
     );
+
     this.fs.copyTpl(
       this.templatePath("_service.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityService),
       { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath("_controller.ts.ejs"),
+      this.destinationPath(entitydir + "/" + entityController),
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl }
     );
     this._cpEntityConfig();
   }
@@ -121,14 +131,6 @@ module.exports = class extends Generator {
     //   bower: false,
     //   yarn: true
     // });
-  }
-
-  _capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
-  _convertToDashCase(string) {
-    return string.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
   }
 
   _cpEntityConfig() {
