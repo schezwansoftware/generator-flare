@@ -1,13 +1,13 @@
 import { Document } from 'mongoose';
 
-export interface I<% entityClassName %> {
+export interface I<%= entityClassName %> {
     id?: string;
 <% for (const field of generatedFields) { %>
     <%= field.fieldName %>?: <%= getType(field.fieldType) %>;
 <% } %>
 }
 
-export class <% entityClassName %> extends Document implements I<% entityClassName %> {
+export class <%= entityClassName %> extends Document implements I<%= entityClassName %> {
     id: string;
 <% for (const field of generatedFields) { %>
     <%= field.fieldName %>: <%= getType(field.fieldType) %>;

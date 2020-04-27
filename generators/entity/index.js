@@ -113,11 +113,13 @@ module.exports = class extends Generator {
   }
 
   _loadJson() {
+    this.fieldNameChoices = [];
     try {
       this.fileData = this.fs.readJSON(this.entityConfigBasePath);
       this.generatedFields = this.fileData.fieldData;
       for (const field of this.generatedFields) {
         this.log(chalk.red(`${field.fieldName}: ${field.fieldType}`));
+        this.fieldNameChoices.push(field.fieldName);
       }
     } catch (err) {
       this.error(chalk.red('\nThe entity configuration file could not be read!\n'));
@@ -231,7 +233,39 @@ module.exports = class extends Generator {
   async _resolveUpdateProps(props) {
     switch (props.updateEntity) {
       case "none":
-        return this.env.error(chalk.yellow('Gracefully aborting entity update..'))
+        return this.env.error(chalk.yellow('Gracefully aborting entity update..'));
+      case "remove":
+        return await this._askRemovePrompts();
+    }
+  }
+
+  async _askRemovePrompts() {
+    var prompts = [
+      {
+        type: 'checkbox',
+        name: 'fieldsToRemove',
+        message: 'Please choose the fields you want to remove',
+        choices: this.fieldNameChoices
+      },
+      {
+        when: function (response) {
+          return response.fieldsToRemove.length !== 0;
+        },
+        type: 'confirm',
+        name: 'confirmRemove',
+        message: 'Are you sure to remove these fields?',
+        default: true
+      }
+    ];
+    const props = await this.prompt(prompts);
+    if (props.confirmRemove) {
+      for (const field of props.fieldsToRemove) {
+        const filtered = this.generatedFields.filter(x => x.fieldName === field);
+        if (filtered && filtered.length > 0) {
+          this.generatedFields.splice(this.generatedFields.indexOf(filtered[0]), 1);
+        }
+      }
+      this.log(chalk.yellow('Removed fields Successfully..'))
     }
   }
 
