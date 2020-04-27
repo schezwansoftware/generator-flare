@@ -1,7 +1,7 @@
 import {Module} from '@nestjs/common';
 import {ChatGroupController} from './chat-group.controller';
 import {ChatGroupService} from './chat-group.service';
-import {ChatGroupRepositroy} from './chat-group.repositroy';
+import {ChatGroupRepositroy} from './_repository.ts.ejs';
 import {ChatGroupSchema} from './_model.ts.ejs';
 import {MongooseModule} from '@nestjs/mongoose';
 

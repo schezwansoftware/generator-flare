@@ -78,12 +78,18 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("_model.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityModel),
-      { entityClassName: entityClassName, generatedFields: this.generatedFields }
-    );
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+      );
     this.fs.copyTpl(
       this.templatePath("_interface.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityInterface),
-      { entityClassName: entityClassName, generatedFields: this.generatedFields }
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath("_repository.ts.ejs"),
+      this.destinationPath(entitydir + "/" + entityRepository),
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
     );
     this._cpEntityConfig();
   }
