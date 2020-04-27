@@ -1,0 +1,24 @@
+import {Injectable} from '@nestjs/common';
+import {IMessage} from './message.interface';
+import {<%= entityClassName %>DTO} from './<%= entityBaseFileName %>.DTO';
+
+@Injectable()
+export class <%= entityClassName %>Mapper {
+  static map<%= entityClassName %>To<%= entityClassName %>DTO(<%= entityName %>: I<%= entityClassName %>): <%= entityClassName %>DTO {
+    return {
+      id: <%= entityName %>.id,
+      <% for(const field of generatedFields) { %>
+      <%= field.fieldName %>: <%= entityName %>.<%= field.fieldName %>,
+      <% } %>
+    };
+  }
+
+  static map<%= entityClassName %>DTOTo<%= entityClassName %>(<%= entityName %>DTO: <%= entityClassName %>DTO): I<%= entityClassName %> {
+    return {
+      id: <%= entityName %>DTO.id,
+      <% for(const field of generatedFields) { %>
+      <%= field.fieldName %>: <%= entityName %>DTO.<%= field.fieldName %>,
+      <% } %>
+    };
+  }
+}

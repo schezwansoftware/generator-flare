@@ -1,12 +1,12 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
-import {<%= entityClassName %>, I<%= entityClassName %>} from './<%= entityBaseFileName %>.interface.ts';
+import {<%= entityClassName %>, I<%= entityClassName %>} from './<%= entityBaseFileName %>.interface';
 
 @Injectable()
 export class <%= entityClassName %>Repositroy {
     constructor(
-        @InjectModel('<%= entityClassName %>') private readonly <%= entityName %>Model: Model<<%= entityClassName %>>
+        @InjectModel('<%= entityClassName %>') private readonly <%= entityName %>Model: Model<<%= entityClassName %>>,
            ) { }
 
     async save(<%= entityName %>: I<%= entityClassName %>): Promise<I<%= entityClassName %>> {

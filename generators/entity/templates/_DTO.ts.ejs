@@ -1,0 +1,25 @@
+export class <%= entityClassName %>DTO {
+    id?: string;
+<% for (const field of generatedFields) { %>
+    <%= field.fieldName %>?: <%= getType(field.fieldType) %>;
+<% } %>
+}
+
+<%
+function getType(type) {
+    switch (type) {
+        case "String":
+            return "string";
+        case "Date":
+            return "Date";
+        case "Boolean":
+            return "boolean";
+        case "ObjectId":
+            return "string";
+        case "Number":
+            return "number";
+        default:
+            return "string";
+    }
+}
+%>
