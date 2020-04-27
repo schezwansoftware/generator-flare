@@ -236,6 +236,10 @@ module.exports = class extends Generator {
         return this.env.error(chalk.yellow('Gracefully aborting entity update..'));
       case "remove":
         return await this._askRemovePrompts();
+      case "add":
+        return this._askForFieldsPrompt();
+      case "regenerate":
+        return ;
     }
   }
 
