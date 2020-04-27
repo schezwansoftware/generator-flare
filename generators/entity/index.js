@@ -73,7 +73,7 @@ module.exports = class extends Generator {
     const entityInterface = `${baseName}.interface.ts`;
     const entityMapper = `${baseName}.mapper.ts`;
     const entityDTO = `${baseName}.DTO.ts`;
-    const entityModule = `${baseName}.controller.ts`;
+    const entityModule = `${baseName}.module.ts`;
     const entityModel = `${baseName}.model.ts`;
     const entityRepository = `${baseName}.repository.ts`;
     const entitydir = entityBasePath + "/" + baseName;
@@ -118,6 +118,11 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("_controller.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityController),
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl }
+    );
+    this.fs.copyTpl(
+      this.templatePath("_module.ts.ejs"),
+      this.destinationPath(entitydir + "/" + entityModule),
       { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl }
     );
     this._cpEntityConfig();
