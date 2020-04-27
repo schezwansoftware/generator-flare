@@ -52,82 +52,12 @@ module.exports = class extends Generator {
         this._loadJson();
       }
   }
-  prompting() {
-    // Have Yeoman greet the user.
-    const fieldsPrompts = [
-      {
-        type: 'confirm',
-        name: 'fieldAdd',
-        message: 'Do you want to add a field to your entity?',
-        default:  true,
-      },
-      {
-        when: function (response) {
-          return response.fieldAdd === true;
-        },
-        type: 'input',
-        name: 'fieldName',
-        validate: function (input) {
-          if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
-            return 'Your field name cannot contain special characters';
-          } else if (input === '') {
-            return 'Your field name cannot be empty';
-          } else if (input.charAt(0) === input.charAt(0).toUpperCase()) {
-            return 'Your field name cannot start with a upper case letter';
-          } else if (input === 'id') {
-            return 'Your field name cannot be id';
-          }  else if (input.length > 30) {
-            return 'The field name cannot be of more than 30 characters';
-          }
-          return true;
-        },
-        message: 'What is the name of your field?'
-      },
-      {
-        when: function (response) {
-          return response.fieldAdd === true;
-        },
-        type: 'list',
-        name: 'fieldType',
-        message: 'What is the type of your field?',
-        choices: [
-          {
-            value: 'String',
-            name: 'String'
-          },
-          {
-            value: 'Number',
-            name: 'Number'
-          },
-          {
-            value: 'ObjectId',
-            name: 'ObjectId'
-          },
-          {
-            value: 'Date',
-            name: 'DateTime'
-          },
-          {
-            value: 'Boolean',
-            name: 'Boolean'
-          },
-        ],
-        default: 0
-      },
-    ];
-
-    const promise = (relevantPrompts) => {
-      return this.prompt(relevantPrompts).then(props => {
-        // To access props later use this.props.someAnswer;
-        if (props.fieldAdd) {
-          const { fieldName, fieldType } = props;
-          const field = {fieldName, fieldType};
-          this.generatedFields.push(field);
-        }
-        return props.fieldAdd ? promise(fieldsPrompts) : this.prompt([]);
-      });
-    };
-    return promise([...fieldsPrompts]);
+   async prompting() {
+    if (this.useConfigurationFile) {
+      await this._askForUpdatePrompt();
+    } else {
+      return  await this._askForFieldsPrompt();
+    }
 
   }
 
@@ -191,6 +121,117 @@ module.exports = class extends Generator {
       }
     } catch (err) {
       this.error(chalk.red('\nThe entity configuration file could not be read!\n'));
+    }
+  }
+
+  async _askForFieldsPrompt() {
+    const fieldsPrompts = [
+      {
+        type: 'confirm',
+        name: 'fieldAdd',
+        message: 'Do you want to add a field to your entity?',
+        default:  true,
+      },
+      {
+        when: function (response) {
+          return response.fieldAdd === true;
+        },
+        type: 'input',
+        name: 'fieldName',
+        validate: function (input) {
+          if (!(/^([a-zA-Z0-9_]*)$/.test(input))) {
+            return 'Your field name cannot contain special characters';
+          } else if (input === '') {
+            return 'Your field name cannot be empty';
+          } else if (input.charAt(0) === input.charAt(0).toUpperCase()) {
+            return 'Your field name cannot start with a upper case letter';
+          } else if (input === 'id') {
+            return 'Your field name cannot be id';
+          }  else if (input.length > 30) {
+            return 'The field name cannot be of more than 30 characters';
+          }
+          return true;
+        },
+        message: 'What is the name of your field?'
+      },
+      {
+        when: function (response) {
+          return response.fieldAdd === true;
+        },
+        type: 'list',
+        name: 'fieldType',
+        message: 'What is the type of your field?',
+        choices: [
+          {
+            value: 'String',
+            name: 'String'
+          },
+          {
+            value: 'Number',
+            name: 'Number'
+          },
+          {
+            value: 'ObjectId',
+            name: 'ObjectId'
+          },
+          {
+            value: 'Date',
+            name: 'DateTime'
+          },
+          {
+            value: 'Boolean',
+            name: 'Boolean'
+          },
+        ],
+        default: 0
+      },
+    ];
+
+    const props = await this.prompt(fieldsPrompts);
+    if (props.fieldAdd) {
+      const { fieldName, fieldType } = props;
+      const field = {fieldName, fieldType};
+      this.generatedFields.push(field);
+      await this._askForFieldsPrompt();
+    }
+  }
+
+  async _askForUpdatePrompt() {
+    this.log(chalk.blue(`Found ${this.entityConfigBasePath}. Loading previously generated fields.`))
+    const prompts = [
+      {
+        type: 'list',
+        name: 'updateEntity',
+        message: 'Do you want to update the entity? This will replace the existing files for this entity, all your custom code will be overwritten',
+        choices: [
+          {
+            value: 'regenerate',
+            name: 'Yes, re generate the entity'
+          },
+          {
+            value: 'add',
+            name: 'Yes, add more fields and relationships'
+          },
+          {
+            value: 'remove',
+            name: 'Yes, remove fields and relationships'
+          },
+          {
+            value: 'none',
+            name: 'No, exit'
+          }
+        ],
+        default: 0
+      }
+    ];
+    const props = await this.prompt(prompts);
+    return await this._resolveUpdateProps(props);
+  }
+
+  async _resolveUpdateProps(props) {
+    switch (props.updateEntity) {
+      case "none":
+        return this.env.error(chalk.yellow('Gracefully aborting entity update..'))
     }
   }
 
