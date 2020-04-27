@@ -1,9 +1,10 @@
 import {Injectable} from '@nestjs/common';
-import {IMessage} from './message.interface';
+import {I<%= entityClassName %>} from './<%= entityBaseFileName %>.interface';
 import {<%= entityClassName %>DTO} from './<%= entityBaseFileName %>.DTO';
 
 @Injectable()
 export class <%= entityClassName %>Mapper {
+
   static map<%= entityClassName %>To<%= entityClassName %>DTO(<%= entityName %>: I<%= entityClassName %>): <%= entityClassName %>DTO {
     return {
       id: <%= entityName %>.id,
@@ -20,5 +21,14 @@ export class <%= entityClassName %>Mapper {
       <%= field.fieldName %>: <%= entityName %>DTO.<%= field.fieldName %>,
       <% } %>
     };
+  }
+
+  static map<%= entityClassName %>ListTo<%= entityClassName %>DTOList(<%= entityName %>List: I<%= entityClassName %>[]): <%= entityClassName %>DTO[] {
+    const <%= entityName %>DTOList: <%= entityClassName %>DTO[] = [];
+    for (const <%= entityName %> of <%= entityName %>List) {
+      const <%= entityName %>DTO = <%= entityClassName %>Mapper.map<%= entityClassName %>To<%= entityClassName %>DTO(<%= entityName %>);
+      <%= entityName %>DTOList.push(<%= entityName %>DTO);
+    }
+    return <%= entityName %>DTOList;
   }
 }

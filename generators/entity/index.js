@@ -105,6 +105,11 @@ module.exports = class extends Generator {
       this.destinationPath(entitydir + "/" + entityDTO),
       { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
     );
+    this.fs.copyTpl(
+      this.templatePath("_service.ts.ejs"),
+      this.destinationPath(entitydir + "/" + entityService),
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+    );
     this._cpEntityConfig();
   }
 
