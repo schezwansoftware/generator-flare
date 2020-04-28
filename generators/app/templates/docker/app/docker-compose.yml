@@ -1,0 +1,13 @@
+version: '3'
+services:
+
+    <%= appName %>:
+        image: <%= appName %>:latest
+        build: ../../server/
+        ports:
+            - <%= appPort %>:<%= appPort %>
+        container_name: <%= appName %>
+        environment:
+            - PORT=<%= appPort %>
+            - MONGO_URL=mongodb://localhost:27017/<%= appName %>
+

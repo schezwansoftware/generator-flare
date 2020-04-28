@@ -152,7 +152,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath(templateDockerBasePath),
       this.destinationPath(dockerBasePath),
-      { appName }
+      { appName, appPort }
     );
 
     this.fs.copyTpl(
