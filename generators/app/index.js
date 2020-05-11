@@ -6,9 +6,11 @@ const mkdirp = require("mkdirp");
 const path = require("path");
 const packagejs = require(__dirname + "/../../package.json");
 const questions = 5;
-const serverBasePath = "server";
 const clientBasePath = "client";
 const dockerBasePath = "docker";
+const {writeServerFiles} = require('./writing');
+const serverBasePath = 'server';
+
 
 module.exports = class extends Generator {
   initializing() {
@@ -175,22 +177,23 @@ module.exports = class extends Generator {
       this.destinationPath(serverBasePath + "/.env"),
       { appName, appPort, dbType }
     );
-
     this.fs.copyTpl(
-      this.templatePath(templateServerBasePath),
-      this.destinationPath(serverBasePath),
+      this.templatePath(".gitignore"),
+      this.destinationPath(".gitignore"),
       { appName, appPort, dbType }
     );
+
+    writeServerFiles.call(this, appName, appPort, dbType);
     this.config.set("appName", appName);
   }
 
   install() {
-    var elementDir = `${this.destinationPath()}/${serverBasePath}`;
-    process.chdir(elementDir);
-    this.installDependencies({
-      npm: false,
-      bower: false,
-      yarn: true
-    });
+    // var elementDir = `${this.destinationPath()}/${serverBasePath}`;
+    // process.chdir(elementDir);
+    // this.installDependencies({
+    //   npm: false,
+    //   bower: false,
+    //   yarn: true
+    // });
   }
 };
