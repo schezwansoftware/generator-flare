@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+<%if (dbType === 'mongodb') {%>import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import {User} from './user.interface';
 
@@ -19,4 +19,55 @@ UserSchema.pre<User>('save', function(next) {
     this.password = bcrypt.hashSync(this.password, 10)
     next();
 });
+<%}%><%if (dbType === 'mysql') {%>import {Entity, Column, PrimaryGeneratedColumn, BeforeInsert, ManyToMany, JoinTable} from 'typeorm';
+import {IsEmail, MinLength, MaxLength} from 'class-validator';
+import * as bcrypt from 'bcrypt';
+import {Authority} from './authority/authority.entity';
 
+@Entity()
+export class User {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({length: 500})
+    @MinLength(5)
+    @MaxLength(100)
+    firstName: string;
+
+    @Column({length: 500, nullable: true})
+    @MinLength(5)
+    @MaxLength(100)
+    lastName: string;
+
+    @Column({length: 500})
+    @MinLength(5)
+    @MaxLength(100)
+    login: string;
+
+    @Column({length: 500})
+    @IsEmail()
+    email: string;
+
+    @Column({length: 500})
+    password: string;
+
+    @Column({length: 500})
+    resetKey: string;
+
+    @Column()
+    resetDate: Date;
+
+    @ManyToMany(type => Authority)
+    @JoinTable({
+        name: 'user_authority',
+        joinColumn: {name: 'user_id', referencedColumnName: 'id'},
+        inverseJoinColumn: {name: 'authority_name', referencedColumnName: 'name'},
+    })
+    authorities: Authority[];
+
+    @BeforeInsert()
+    hashPassword() {
+        this.password = bcrypt.hashSync(this.password, 10);
+    }
+}
+<%}%>

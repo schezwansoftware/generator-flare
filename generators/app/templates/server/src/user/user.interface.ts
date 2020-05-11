@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+<% if (dbType === 'mongodb') {%>import { Document } from 'mongoose';
 
 export interface IUser {
     readonly id: string;
@@ -23,3 +23,19 @@ export class User extends Document implements IUser {
     readonly resetDate: Date;
     readonly resetKey: string;
 }
+
+<%}%><% if (dbType === 'mysql') {-%>import {User} from './user.model';
+import {Authority} from './authority/authority.entity';
+
+export interface IUser extends User {
+    id: number;
+    firstName: string;
+    lastName: string;
+    login: string;
+    email: string;
+    password: string;
+    resetKey: string;
+    resetDate: Date;
+    authorities: Authority[];
+}
+<%}-%>
