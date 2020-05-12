@@ -1,6 +1,8 @@
 import {Injectable} from '@nestjs/common';
-import {IUser, User} from './user.interface';
 import {UserDTO} from './user.dto';
+<% if (dbType === 'mongodb') {%>import {IUser, User} from './user.interface';
+  <%}%><% if (dbType === 'mysql') {%>import {IUser} from './user.interface';
+  <%}%>
 
 @Injectable()
 export class UserMapper {

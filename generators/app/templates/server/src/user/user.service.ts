@@ -1,11 +1,12 @@
 import {BadRequestException, HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {UserRepository} from './user.repository';
 import {UserDTO} from './user.dto';
 import {UserMapper} from './user.mapper';
 import {IUser} from './user.interface';
 import * as randomString from 'randomstring';
 import {USER} from '../auth/security/authority.constants';
-
+<% if (dbType === 'mongodb') {%>import {UserRepository} from './user.repository';
+  <%}%><% if (dbType === 'mysql') {%>import {UsersRepository as UserRepository} from './user.repository';
+  <%}%>
 @Injectable()
 export class UserService {
 
@@ -75,7 +76,7 @@ export class UserService {
         return this.userMapper.mapUserToUserDTOList(users);
     }
 
-    async findOneWithAuthoritiesById(id: string): Promise<UserDTO> {
+    async findOneWithAuthoritiesById(<% if (dbType === 'mongodb') {%>id: string<%}%><% if (dbType === 'mysql') {%>id: number<%}%>): Promise<UserDTO> {
         const user: IUser = await this.userRepository.findById(id);
         if (user) {
             return this.userMapper.mapUserToUserDTO(user);
@@ -103,7 +104,7 @@ export class UserService {
         throw new BadRequestException('Invalid Login.');
     }
 
-    async deleteUser(id: string): Promise<void> {
+    async deleteUser(<% if (dbType === 'mongodb') {%>id: string<%}%><% if (dbType === 'mysql') {%>id: number<%}%>): Promise<void> {
         return await this.userRepository.deleteById(id);
     }
 

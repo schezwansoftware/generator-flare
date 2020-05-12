@@ -75,6 +75,11 @@ function writeSqlFiles(appName, appPort, dbType) {
     this.destinationPath(serverBasePath + '/src/database'),
     {appName, appPort, dbType}
   );
+  this.fs.copyTpl(
+    this.templatePath(serverBasePath + '/entity.constants.ts'),
+    this.destinationPath(serverBasePath + '/src/entity/entity.constants.ts'),
+    {appName, appPort, dbType}
+  );
 }
 
 function writeCassandraFiles(appName, appPort, dbType) {
