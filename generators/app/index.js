@@ -188,12 +188,12 @@ module.exports = class extends Generator {
   }
 
   install() {
-    // var elementDir = `${this.destinationPath()}/${serverBasePath}`;
-    // process.chdir(elementDir);
-    // this.installDependencies({
-    //   npm: false,
-    //   bower: false,
-    //   yarn: true
-    // });
+    var elementDir = `${this.destinationPath()}/${serverBasePath}`;
+    process.chdir(elementDir);
+    this.installDependencies({
+      npm: false,
+      bower: false,
+      yarn: true
+    });
   }
 };

@@ -12,6 +12,8 @@ const commonConfigFiles = [
   'src/shared/',
   'src/templates/',
   'src/main.ts',
+  'src/app.module.ts',
+  'src/app.constants.ts',
   'test/',
 ]
 const writeServerFiles = function (appName, appPort, dbType)  {
@@ -56,9 +58,21 @@ function writeMongoFiles(appName, appPort, dbType) {
 
 function writeSqlFiles(appName, appPort, dbType) {
   const userBasePath = serverBasePath + '/src/user';
+  const authorityBasePath = serverBasePath + '/authority';
   this.fs.copyTpl(
     this.templatePath(userBasePath),
     this.destinationPath(userBasePath),
+    {appName, appPort, dbType}
+  );
+  this.fs.copyTpl(
+    this.templatePath(authorityBasePath),
+    this.destinationPath(userBasePath + '/authority'),
+    {appName, appPort, dbType}
+  );
+
+  this.fs.copyTpl(
+    this.templatePath(serverBasePath + '/database'),
+    this.destinationPath(serverBasePath + '/src/database'),
     {appName, appPort, dbType}
   );
 }
