@@ -185,6 +185,7 @@ module.exports = class extends Generator {
 
     writeServerFiles.call(this, appName, appPort, dbType);
     this.config.set("appName", appName);
+    this.config.set("dbType", dbType);
   }
 
   install() {
