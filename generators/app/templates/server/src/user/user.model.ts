@@ -19,9 +19,8 @@ UserSchema.pre<User>('save', function(next) {
     this.password = bcrypt.hashSync(this.password, 10)
     next();
 });
-<%}%><%if (dbType === 'mysql') {%>import {Entity, Column, PrimaryGeneratedColumn, BeforeInsert, ManyToMany, JoinTable} from 'typeorm';
+<%}%><%if (dbType === 'mysql') {%>import {Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable} from 'typeorm';
 import {IsEmail, MinLength, MaxLength} from 'class-validator';
-import * as bcrypt from 'bcrypt';
 import {Authority} from './authority/authority.entity';
 
 @Entity()
@@ -51,10 +50,10 @@ export class User {
     @Column({length: 500})
     password: string;
 
-    @Column({length: 500})
+    @Column({length: 500, nullable: true})
     resetKey: string;
 
-    @Column()
+    @Column({nullable: true})
     resetDate: Date;
 
     @ManyToMany(type => Authority)
@@ -64,10 +63,5 @@ export class User {
         inverseJoinColumn: {name: 'authority_name', referencedColumnName: 'name'},
     })
     authorities: Authority[];
-
-    @BeforeInsert()
-    hashPassword() {
-        this.password = bcrypt.hashSync(this.password, 10);
-    }
 }
 <%}%>

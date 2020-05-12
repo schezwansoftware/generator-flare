@@ -46,6 +46,7 @@ import {FindOneOptions, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {User} from './user.model';
 import {IUser} from './user.interface';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersRepository {
@@ -56,10 +57,12 @@ export class UsersRepository {
    ) {}
 
     async save(user: IUser): Promise<User> {
-             return await this.userModel.save(user);
+        user.password = this.encryptPassword(user.password);
+        return await this.userModel.save(user);
     }
 
     async update(user: IUser): Promise<IUser> {
+        user.password = this.encryptPassword(user.password);
         await this.userModel.update(user.id, user);
         return await this.userModel.findOne(user.id);
     }
@@ -93,6 +96,10 @@ export class UsersRepository {
 
     async findByLogin(login: string): Promise<User> {
         return await this.userModel.findOne({login});
+    }
+
+    private encryptPassword(password: string) {
+      return  bcrypt.hashSync(password, 10);
     }
 }
 <%}%>

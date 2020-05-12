@@ -60,7 +60,6 @@ export class UserMapper {
             authorities: user.authorities.map(name => ({name})),
             resetKey: null,
             resetDate: null,
-            hashPassword() {},
         };
     }
 
