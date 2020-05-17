@@ -4,8 +4,9 @@ import {UserService} from '../../user/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {JWTToken} from './token.model';
 import {JWT_EXPIRY_TIME_IN_SECONDS} from '../../app.constants';
-import {UserRepository} from '../../user/user.repository';
-
+<% if (dbType === 'mongodb') {%>import {UserRepository} from '../../user/user.repository';
+<%}%><% if (dbType === 'mysql') {%>import {UsersRepository as UserRepository} from '../../user/user.repository';
+<%}%>
 @Injectable()
 export class TokenProvider {
 

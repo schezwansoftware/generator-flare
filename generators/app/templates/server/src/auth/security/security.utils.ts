@@ -6,7 +6,11 @@ export class SecurityUtils {
 
     static setCurrentUser(user: IUser): void {
         this.user = user;
-        this.authoirities = user.authorities;
+<% if (dbType === 'mongodb') {-%>
+       this.authoirities = user.authorities;
+<%}-%><% if (dbType === 'mysql') {-%>
+       this.authoirities = user.authorities.map(x => x.name);
+<%}-%>
     }
 
     static getCurrentUserLoggedIn(): IUser {

@@ -6,9 +6,11 @@ const mkdirp = require("mkdirp");
 const path = require("path");
 const packagejs = require(__dirname + "/../../package.json");
 const questions = 5;
-const serverBasePath = "server";
 const clientBasePath = "client";
 const dockerBasePath = "docker";
+const {writeServerFiles} = require('./writing');
+const serverBasePath = 'server';
+
 
 module.exports = class extends Generator {
   initializing() {
@@ -70,8 +72,13 @@ module.exports = class extends Generator {
         default: "service",
         choices: [
           { name: "MicroService (NestJS)", value: "service" },
-          { name: "Fullstack (NESTJS + Angular)", value: "fullstack" }
-        ]
+          { name: "Fullstack (NESTJS + Angular) [Coming Soon!]", value: "fullstack" }
+        ],
+        validate: (input) => {
+          if (input !== 'service') {
+            return 'This feature will be added in the future release';
+          }
+        }
       },
       {
         type: "input",
@@ -94,13 +101,18 @@ module.exports = class extends Generator {
           {
             value: "oauth2",
             name:
-              "OAuth2 Authentication (stateless, with an OAuth2 server implementation)"
+              "OAuth2 Authentication (stateless, with an OAuth2 server implementation) [Coming Soon!]"
           },
           {
             value: "jwt",
             name: "JWT Token-based authentication (stateless, with a token)"
           }
         ],
+        validate: (input) => {
+          if (input !== 'jwt') {
+            return 'This feature will be added in the future release';
+          }
+        },
         default: "jwt"
       },
       {
@@ -108,15 +120,15 @@ module.exports = class extends Generator {
           return answers.authenticationType === "jwt";
         },
         type: "list",
-        name: "databaseType",
+        name: "dbType",
         message:
           "(4/" +
           questions +
           ")  Which *type* of database would you like to use?",
         choices: [
           {
-            value: "sql",
-            name: "SQL (H2, MySQL, PostgreSQL, Oracle)"
+            value: "mysql",
+            name: "MySQL"
           },
           {
             value: "mongodb",
@@ -127,6 +139,11 @@ module.exports = class extends Generator {
             name: "Cassandra"
           }
         ],
+        validate: (input) => {
+          if (input !== 'mongodb') {
+            return 'This feature will be added in the future release';
+          }
+        },
         default: "mongodb"
       }
     ];
@@ -142,31 +159,33 @@ module.exports = class extends Generator {
       appName,
       appType,
       authenticationType,
-      databaseType,
+      dbType,
       appPort
     } = this.props;
     mkdirp(appName);
     this.destinationRoot(path.join(this.destinationRoot(), '/' + appName));
-    const templateDockerBasePath = "docker";
+    const templateDockerBasePath = `docker/${dbType}`;
     const templateServerBasePath = "server";
     this.fs.copyTpl(
       this.templatePath(templateDockerBasePath),
-      this.destinationPath(dockerBasePath),
-      { appName, appPort }
+      this.destinationPath(`${dockerBasePath}/${dbType}`),
+      { appName, appPort, dbType }
     );
 
     this.fs.copyTpl(
       this.templatePath(serverBasePath + "/.env"),
       this.destinationPath(serverBasePath + "/.env"),
-      { appName, appPort }
+      { appName, appPort, dbType }
+    );
+    this.fs.copyTpl(
+      this.templatePath(".gitignore"),
+      this.destinationPath(".gitignore"),
+      { appName, appPort, dbType }
     );
 
-    this.fs.copyTpl(
-      this.templatePath(templateServerBasePath),
-      this.destinationPath(serverBasePath),
-      { appName, appPort }
-    );
+    writeServerFiles.call(this, appName, appPort, dbType);
     this.config.set("appName", appName);
+    this.config.set("dbType", dbType);
   }
 
   install() {

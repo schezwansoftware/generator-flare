@@ -6,3 +6,9 @@ export const MAIL_USERNAME: string = process.env.MAIL_USERNAME;
 export const MAIL_PASSWORD: string = process.env.MAIL_PASSWORD;
 export const MAIL_FROM: string = process.env.MAIL_FROM;
 export const MAIL_BASE_URL: string = process.env.MAIL_BASE_URL;
+<% if (dbType === 'mysql') {%>export const DB_USER: string = process.env.DB_USER || 'root';
+export const DB_HOST: string = process.env.DB_HOST || 'localhost';
+export const DB_PORT: string = process.env.DB_PORT || '3306';
+export const DB_PASSWORD: string = process.env.DB_PASSWORD ;
+export const DB_NAME: string = process.env.DB_NAME || 'sqlserver';
+<%}%>

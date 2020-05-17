@@ -1,8 +1,13 @@
 import {IsEmail, IsNotEmpty, MaxLength, Min, MinLength} from 'class-validator';
 
 export class UserDTO {
+    <% if(dbType === 'mongodb') {%>
     id: string;
+    <%}%>
 
+<% if(dbType === 'mysql') {%>
+   id: number;
+  <%}%>
     @MinLength(3)
     @MaxLength(100)
     firstName: string;
