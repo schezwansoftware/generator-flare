@@ -49,57 +49,25 @@ import {IUser} from './user.interface';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsersRepository {
+export class UserRepository extends Repository<User> {
 
-   constructor(
-        @InjectRepository(User)
-        private readonly userModel: Repository<User>,
-   ) {}
-
-    async save(user: IUser): Promise<User> {
-        user.password = this.encryptPassword(user.password);
-        return await this.userModel.save(user);
-    }
-
-    async update(user: IUser): Promise<IUser> {
-        user.password = this.encryptPassword(user.password);
-        await this.userModel.update(user.id, user);
-        return await this.userModel.findOne(user.id);
-    }
-
-    async findAll(): Promise<IUser[]> {
-        return await this.userModel.find();
-    }
-
-    async findById(id: number): Promise<IUser> {
-        return await this.userModel.findOne(id);
-    }
-
-    async deleteById(id: number): Promise<void> {
-        await this.userModel.delete(id);
-    }
-
-   async findByEmail(email: string): Promise<IUser> {
-        return await this.userModel.findOne({email});
+    async findByEmail(email: string): Promise<IUser> {
+        return await this.findOne({email});
     }
 
     async findByEmailOrLogin(email: string): Promise<User> {
         const options: FindOneOptions = {
             relations: ['authorities'],
-            where: [
-                {login: email},
-                {email},
-            ],
+        where: [
+        {login: email},
+        {email},
+        ],
         };
-        return await this.userModel.findOne(options);
+        return await this.findOne(options);
     }
 
-    async findByLogin(login: string): Promise<User> {
-        return await this.userModel.findOne({login});
-    }
-
-    private encryptPassword(password: string) {
-      return  bcrypt.hashSync(password, 10);
-    }
-}
+            async findByLogin(login: string): Promise<User> {
+                return await this.findOne({login});
+                }
+                }
 <%}%>

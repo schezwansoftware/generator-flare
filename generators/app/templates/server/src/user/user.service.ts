@@ -108,4 +108,7 @@ export class UserService {
         return await this.userRepository.deleteById(id);
     }
 
+    <% if (dbType === 'mysql') {%>
+
+    <%}%>
 }
