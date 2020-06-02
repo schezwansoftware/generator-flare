@@ -26,6 +26,7 @@ module.exports = class extends Generator {
     // This makes `appname` a required argument.
     this.argument("entityName", { type: String, required: true });
     this.appName = this.config.get('appName');
+    this.dbType = this.config.get('dbType');
     if (!this.appName) {
       throw new Error("Folder is Not recognized as a valid Flare Project.")
     }
@@ -121,7 +122,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("_controller.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityController),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl }
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl, dbType: this.dbType }
     );
     this.fs.copyTpl(
       this.templatePath("_module.ts.ejs"),
@@ -181,6 +182,30 @@ module.exports = class extends Generator {
   }
 
   async _askForFieldsPrompt() {
+    let typeChoices = [
+      {
+        value: 'String',
+        name: 'String'
+      },
+      {
+        value: 'Number',
+        name: 'Number'
+      },
+      {
+        value: 'Date',
+        name: 'DateTime'
+      },
+      {
+        value: 'Boolean',
+        name: 'Boolean'
+      },
+    ];
+    if (this.dbType === 'mongodb') {
+      typeChoices.push({
+        value: 'ObjectId',
+        name: 'ObjectId'
+      });
+    }
     const fieldsPrompts = [
       {
         type: 'confirm',
@@ -217,28 +242,7 @@ module.exports = class extends Generator {
         type: 'list',
         name: 'fieldType',
         message: 'What is the type of your field?',
-        choices: [
-          {
-            value: 'String',
-            name: 'String'
-          },
-          {
-            value: 'Number',
-            name: 'Number'
-          },
-          {
-            value: 'ObjectId',
-            name: 'ObjectId'
-          },
-          {
-            value: 'Date',
-            name: 'DateTime'
-          },
-          {
-            value: 'Boolean',
-            name: 'Boolean'
-          },
-        ],
+        choices: typeChoices,
         default: 0
       },
     ];

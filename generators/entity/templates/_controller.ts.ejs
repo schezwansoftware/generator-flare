@@ -1,7 +1,7 @@
 import {BadRequestException, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
 import {<%= entityClassName %>Service} from './<%= entityBaseFileName %>.service';
 import {<%= entityClassName %>DTO} from './<%= entityBaseFileName %>.DTO';
-import * as mongoose from 'mongoose';
+<% if (dbType === 'mongodb') {%> import * as mongoose from 'mongoose'; <%}%>
 
 
 @Controller('api')
@@ -22,10 +22,10 @@ export class <%= entityClassName %>Controller {
     async update(@Body() <%= entityName %>DTO: <%= entityClassName %>DTO): Promise<<%= entityClassName %>DTO> {
         if (!<%= entityName %>DTO.id) {
             throw new BadRequestException('A <%= entityName %> must have an Id');
-        }
-        if (<%= entityName %>DTO.id && !mongoose.Types.ObjectId.isValid(<%= entityName %>DTO.id)) {
-            throw new BadRequestException('Invalid Id.');
-        }
+        }<% if (dbType === 'mongodb') {%>if (<%= entityName %>DTO.id && !mongoose.Types.ObjectId.isValid(<%= entityName %>DTO.id)) {
+                throw new BadRequestException('Invalid Id.');
+            }
+        <%}%>
         return await this.<%= entityName %>Service.update(<%= entityName %>DTO);
     }
 
@@ -35,18 +35,22 @@ export class <%= entityClassName %>Controller {
     }
 
     @Get('<%= entityAPIUrl %>/:id')
-    async getOne(@Param('id') id: string): Promise<<%= entityClassName %>DTO> {
+    async getOne(@Param('id') id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<<%= entityClassName %>DTO> {
+        <%if (dbType === 'mongodb') {%>
         if (id && !mongoose.Types.ObjectId.isValid(id)) {
             throw new BadRequestException('Invalid Id.');
         }
-            return await this.<%= entityName %>Service.findById(id);
+        <%}%>
+        return await this.<%= entityName %>Service.findById(id);
     }
 
     @Delete('<%= entityAPIUrl %>/:id')
-    async delete(@Param('id') id: string): Promise<void> {
+    async delete(@Param('id') id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<void> {
+        <%if (dbType === 'mongodb') {%>
         if (id && !mongoose.Types.ObjectId.isValid(id)) {
             throw new BadRequestException('Invalid Id.');
         }
+        <%}%>
         return await this.<%= entityName %>Service.deleteById(id);
     }
 }
