@@ -41,7 +41,11 @@ module.exports = class extends Generator {
     this.useConfigurationFile = fileSystem.existsSync(this.entityConfigBasePath);
 
   };
+
+
+
   initializing() {
+    this._validateEntityName();
       this.log(' \n' +
         chalk.green('      ██████ ') + chalk.red(' ██      ') + chalk.yellow(' ████████ ') + chalk.blue(' █████████  ') + chalk.magenta(' ███████\n') +
         chalk.green('      ██') + chalk.red('      ██      ') + chalk.yellow(' ██    ██ ') + chalk.blue(' ██      ██ ') + chalk.magenta(' ██      \n') +
@@ -56,6 +60,21 @@ module.exports = class extends Generator {
       } else {
         this._loadJson();
       }
+  }
+
+  _validateEntityName() {
+    console.log('here');
+    if (!(/^([a-zA-Z0-9_]*)$/.test(this.entityName))) {
+      throw new Error(chalk.red('The entity name cannot contain special characters'));
+    } else if (this.entityName === '') {
+      throw new Error(chalk.red('The entity name cannot be empty'));
+    } else if (this.entityName.indexOf('Detail', this.entityName.length - 'Detail'.length) !== -1) {
+      throw new Error(chalk.red('The entity name cannot end with \'Detail\''));
+    } else if (this.entityName[0].toUpperCase() === this.entityName[0]) {
+      throw new Error(chalk.red('The entity name cannot start with an upercase letter'));
+    } else if (pluralize.isPlural(this.entityName)) {
+      throw new Error(chalk.red('The entity name cannot be a plural word'));
+    }
   }
    async prompting() {
     if (this.useConfigurationFile) {
@@ -98,7 +117,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("_repository.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityRepository),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields, pluralizedEntityName: pluralize(entityClassName) }
     );
 
     this.fs.copyTpl(
@@ -110,13 +129,13 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("_DTO.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityDTO),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields, dbType: this.dbType }
     );
 
     this.fs.copyTpl(
       this.templatePath("_service.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityService),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields, dbType: this.dbType, pluralizedEntityName: pluralize(entityClassName) }
     );
 
     this.fs.copyTpl(
@@ -127,7 +146,7 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("_module.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityModule),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl }
+      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl, dbType: this.dbType }
     );
     const entityBaseModulePath = entityBasePath + "/entity.module.ts";
     if (fileSystem.existsSync(entityBaseModulePath)) {

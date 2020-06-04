@@ -26,12 +26,12 @@ constructor(private <%= entityName %>Repositroy: <%= entityClassName %>Repositro
         return <%= entityClassName %>Mapper.map<%= entityClassName %>ListTo<%= entityClassName %>DTOList(<%= entityName %>List);
     }
 
-    async findById(id: string): Promise<<%= entityClassName %>DTO> {
+    async findById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<<%= entityClassName %>DTO> {
         const <%= entityName %>: I<%= entityClassName %> = await this.<%= entityName %>Repositroy.findById(id);
         return <%= entityClassName %>Mapper.map<%= entityClassName %>To<%= entityClassName %>DTO(<%= entityName %>);
     }
 
-    async deleteById(id: string): Promise<void> {
+    async deleteById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<void> {
         return await this.<%= entityName %>Repositroy.deleteById(id);
     }
 }
