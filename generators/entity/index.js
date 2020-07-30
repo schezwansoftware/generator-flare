@@ -24,7 +24,7 @@ module.exports = class extends Generator {
     super(args, opts);
 
     // This makes `appname` a required argument.
-    this.argument("entityName", { type: String, required: true });
+    this.argument("entityName", {type: String, required: true});
     this.appName = this.config.get('appName');
     this.dbType = this.config.get('dbType');
     if (!this.appName) {
@@ -43,27 +43,25 @@ module.exports = class extends Generator {
   };
 
 
-
   initializing() {
     this._validateEntityName();
-      this.log(' \n' +
-        chalk.green('      ██████ ') + chalk.red(' ██      ') + chalk.yellow(' ████████ ') + chalk.blue(' █████████  ') + chalk.magenta(' ███████\n') +
-        chalk.green('      ██') + chalk.red('      ██      ') + chalk.yellow(' ██    ██ ') + chalk.blue(' ██      ██ ') + chalk.magenta(' ██      \n') +
-        chalk.green('      ██████ ') + chalk.red(' ██      ') + chalk.yellow(' ████████ ') + chalk.blue(' █████████  ') + chalk.magenta(' ███████    \n') +
-        chalk.green('      ██') + chalk.red('      ██      ') + chalk.yellow(' ██    ██ ') + chalk.blue(' ██     ██  ') + chalk.magenta(' ██        \n') +
-        chalk.green('      ██') + chalk.red('      ████████') + chalk.yellow(' ██    ██ ') + chalk.blue(' ██      ██ ') + chalk.magenta(' ███████       \n') + ''
-      );
-      this.log(chalk.white('Welcome to the Flare Generator ') + chalk.yellow('v' + packagejs.version + '\n'));
+    this.log(' \n' +
+      chalk.green('      ██████ ') + chalk.red(' ██      ') + chalk.yellow(' ████████ ') + chalk.blue(' █████████  ') + chalk.magenta(' ███████\n') +
+      chalk.green('      ██') + chalk.red('      ██      ') + chalk.yellow(' ██    ██ ') + chalk.blue(' ██      ██ ') + chalk.magenta(' ██      \n') +
+      chalk.green('      ██████ ') + chalk.red(' ██      ') + chalk.yellow(' ████████ ') + chalk.blue(' █████████  ') + chalk.magenta(' ███████    \n') +
+      chalk.green('      ██') + chalk.red('      ██      ') + chalk.yellow(' ██    ██ ') + chalk.blue(' ██     ██  ') + chalk.magenta(' ██        \n') +
+      chalk.green('      ██') + chalk.red('      ████████') + chalk.yellow(' ██    ██ ') + chalk.blue(' ██      ██ ') + chalk.magenta(' ███████       \n') + ''
+    );
+    this.log(chalk.white('Welcome to the Flare Generator ') + chalk.yellow('v' + packagejs.version + '\n'));
 
-      if (!this.useConfigurationFile) {
-        this.generatedFields = [];
-      } else {
-        this._loadJson();
-      }
+    if (!this.useConfigurationFile) {
+      this.generatedFields = [];
+    } else {
+      this._loadJson();
+    }
   }
 
   _validateEntityName() {
-    console.log('here');
     if (!(/^([a-zA-Z0-9_]*)$/.test(this.entityName))) {
       throw new Error(chalk.red('The entity name cannot contain special characters'));
     } else if (this.entityName === '') {
@@ -76,11 +74,12 @@ module.exports = class extends Generator {
       throw new Error(chalk.red('The entity name cannot be a plural word'));
     }
   }
-   async prompting() {
+
+  async prompting() {
     if (this.useConfigurationFile) {
       await this._askForUpdatePrompt();
     } else {
-      return  await this._askForFieldsPrompt();
+      return await this._askForFieldsPrompt();
     }
 
   }
@@ -100,58 +99,67 @@ module.exports = class extends Generator {
     const entityModel = `${baseName}.model.ts`;
     const entityRepository = `${baseName}.repository.ts`;
     const entitydir = entityBasePath + "/" + baseName;
+    const config = {
+      entityName: this.entityName,
+      entityClassName: entityClassName,
+      entityBaseFileName: baseName,
+      generatedFields: this.generatedFields,
+      pluralizedEntityName: pluralize(entityClassName),
+      dbType: this.dbType,
+      entityAPIUrl: entityAPIUrl
+    };
     if (!fileSystem.existsSync(entitydir)) {
       fileSystem.mkdirSync(entitydir);
     }
     this.fs.copyTpl(
       this.templatePath("_model.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityModel),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
-      );
+      config
+    );
     this.fs.copyTpl(
       this.templatePath("_interface.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityInterface),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+      config
     );
 
     this.fs.copyTpl(
       this.templatePath("_repository.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityRepository),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields, pluralizedEntityName: pluralize(entityClassName) }
+      config
     );
 
     this.fs.copyTpl(
       this.templatePath("_mapper.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityMapper),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields }
+      config
     );
 
     this.fs.copyTpl(
       this.templatePath("_DTO.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityDTO),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields, dbType: this.dbType }
+      config
     );
 
     this.fs.copyTpl(
       this.templatePath("_service.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityService),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  generatedFields: this.generatedFields, dbType: this.dbType, pluralizedEntityName: pluralize(entityClassName) }
+      config
     );
 
     this.fs.copyTpl(
       this.templatePath("_controller.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityController),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl, dbType: this.dbType }
+      config
     );
     this.fs.copyTpl(
       this.templatePath("_module.ts.ejs"),
       this.destinationPath(entitydir + "/" + entityModule),
-      { entityName: this.entityName,  entityClassName: entityClassName, entityBaseFileName: baseName,  entityAPIUrl: entityAPIUrl, dbType: this.dbType }
+      config
     );
     const entityBaseModulePath = entityBasePath + "/entity.module.ts";
     if (fileSystem.existsSync(entityBaseModulePath)) {
       this.fs.copy(entityBaseModulePath, entityBaseModulePath, {
-        process: function(content) {
+        process: function (content) {
 
           /* Any modification goes here. Note that contents is a Buffer object */
           if (!content.toString().includes(entityModuleName)) {
@@ -182,7 +190,7 @@ module.exports = class extends Generator {
 
   _cpEntityConfig() {
     const fieldData = this.generatedFields;
-    const data = { fieldData };
+    const data = {fieldData};
     fileSystem.writeFileSync(this.entityConfigBasePath, JSON.stringify(data));
   }
 
@@ -230,7 +238,7 @@ module.exports = class extends Generator {
         type: 'confirm',
         name: 'fieldAdd',
         message: 'Do you want to add a field to your entity?',
-        default:  true,
+        default: true,
       },
       {
         when: function (response) {
@@ -247,7 +255,7 @@ module.exports = class extends Generator {
             return 'Your field name cannot start with a upper case letter';
           } else if (input === 'id') {
             return 'Your field name cannot be id';
-          }  else if (input.length > 30) {
+          } else if (input.length > 30) {
             return 'The field name cannot be of more than 30 characters';
           }
           return true;
@@ -268,7 +276,7 @@ module.exports = class extends Generator {
 
     const props = await this.prompt(fieldsPrompts);
     if (props.fieldAdd) {
-      const { fieldName, fieldType } = props;
+      const {fieldName, fieldType} = props;
       const field = {fieldName, fieldType};
       this.generatedFields.push(field);
       await this._askForFieldsPrompt();
@@ -316,7 +324,7 @@ module.exports = class extends Generator {
       case "add":
         return this._askForFieldsPrompt();
       case "regenerate":
-        return ;
+        return;
     }
   }
 

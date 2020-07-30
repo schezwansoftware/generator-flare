@@ -1,10 +1,15 @@
-import * as mongoose from 'mongoose';
+<% if (dbType === 'mongodb') {%>import * as mongoose from 'mongoose';
 
 export const <%= entityClassName %>Schema = new mongoose.Schema({
-    <% for (const field of generatedFields) { %>
-        <%= field.fieldName %>: {type: mongoose.SchemaTypes.<%= field.fieldType%>, required: <%= field.requiredField ? 'true': 'false'%>},
-    <% } %>
+<% for (const field of generatedFields) { %>
+    <%= field.fieldName %>: {type: mongoose.SchemaTypes.<%= field.fieldType%>, required: <%= field.requiredField ? 'true': 'false'%>},
+<% } %>
 });
+<%}%><% if (dbType === 'mysql') {%>import * as mongoose from 'mongoose';
 
+export class <%= entityClassName %> {
+<% for (const field of generatedFields) { -%><%= field.fieldName %>: <%= field.fieldType %>
+<% } %>}
+<%}%>
 
 
