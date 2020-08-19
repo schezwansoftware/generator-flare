@@ -5,6 +5,7 @@ import {ExtractJwt, Strategy, VerifiedCallback} from 'passport-jwt';
 import {SecurityUtils} from '../security/security.utils';
 import {TokenProvider} from './token.provider';
 import {JWT_SECRET} from '../../app.constants';
+import * as contextService from 'request-context';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -23,7 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         if (!user) {
             throw new UnauthorizedException();
         }
-        SecurityUtils.setCurrentUser(user);
+        contextService.set('request:user', user);
         return callback(null, user);
     }
 }
