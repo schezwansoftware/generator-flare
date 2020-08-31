@@ -15,74 +15,79 @@ const commonConfigFiles = [
   'src/app.module.ts',
   'src/app.constants.ts',
   'test/',
-]
-const writeServerFiles = function (appName, appPort, dbType)  {
- writeBaseFiles.call(this, appName, appPort, dbType);
-}
+];
+const writeServerFiles = function (appName, appPort, dbType, appType)  {
+ writeBaseFiles.call(this, appName, appPort, dbType, appType);
+};
 
 
-function writeBaseFiles(appName, appPort, dbType) {
+function writeBaseFiles(appName, appPort, dbType, appType) {
   this.fs.copyTpl(
     this.templatePath(serverBasePath + '/package.json'),
     this.destinationPath(serverBasePath + '/package.json'),
-    {appName, appPort, dbType}
+    {appName, appPort, dbType, appType}
+  );
+  this.fs.copyTpl(
+    this.templatePath('.gitignore'),
+    this.destinationPath(serverBasePath + '.gitignore'),
+    {appName, appPort, dbType, appType}
   );
   for (const file of commonConfigFiles) {
     this.fs.copyTpl(
       this.templatePath(serverBasePath + '/' + file),
       this.destinationPath(serverBasePath + '/' + file),
-      {appName, appPort, dbType}
+      {appName, appPort, dbType, appType}
     );
   }
   switch (dbType) {
     case 'mongodb':
-      writeMongoFiles.call(this, appName, appPort, dbType);
+      writeMongoFiles.call(this, appName, appPort, dbType, appType);
       break;
     case 'mysql':
-      writeSqlFiles.call(this, appName, appPort, dbType);
+      writeSqlFiles.call(this, appName, appPort, dbType, appType);
       break;
     case 'cassandra':
-      writeCassandraFiles.call(this, appName, appPort, dbType);
+      writeCassandraFiles.call(this, appName, appPort, dbType, appType);
       break;
   }
 }
 
-function writeMongoFiles(appName, appPort, dbType) {
+function writeMongoFiles(appName, appPort, dbType, appType) {
   const userBasePath = serverBasePath + '/src/user';
   this.fs.copyTpl(
     this.templatePath(userBasePath),
     this.destinationPath(userBasePath),
-    {appName, appPort, dbType}
+    {appName, appPort, dbType, appType}
   );
 }
 
-function writeSqlFiles(appName, appPort, dbType) {
+function writeSqlFiles(appName, appPort, dbType, appType) {
   const userBasePath = serverBasePath + '/src/user';
   const authorityBasePath = serverBasePath + '/authority';
   this.fs.copyTpl(
     this.templatePath(userBasePath),
     this.destinationPath(userBasePath),
-    {appName, appPort, dbType}
+    {appName, appPort, dbType, appType}
   );
   this.fs.copyTpl(
     this.templatePath(authorityBasePath),
     this.destinationPath(userBasePath + '/authority'),
-    {appName, appPort, dbType}
+    {appName, appPort, dbType, appType}
   );
 
   this.fs.copyTpl(
     this.templatePath(serverBasePath + '/database'),
     this.destinationPath(serverBasePath + '/src/database'),
-    {appName, appPort, dbType}
+    {appName, appPort, dbType, appType}
   );
   this.fs.copyTpl(
     this.templatePath(serverBasePath + '/entity.constants.ts'),
     this.destinationPath(serverBasePath + '/src/entity/entity.constants.ts'),
-    {appName, appPort, dbType}
+    {appName, appPort, dbType, appType}
   );
 }
 
-function writeCassandraFiles(appName, appPort, dbType) {
+function writeCassandraFiles(appName, appPort, dbType, appType) {
 
 }
 module.exports = {writeServerFiles}

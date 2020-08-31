@@ -187,7 +187,7 @@ module.exports = class extends Generator {
       {appName, appPort, dbType}
     );
 
-    writeServerFiles.call(this, appName, appPort, dbType);
+    writeServerFiles.call(this, appName, appPort, dbType, appType);
     this.config.set("appName", appName);
     this.config.set("appType", appType);
     this.config.set("dbType", dbType);
@@ -197,7 +197,7 @@ module.exports = class extends Generator {
     var done = this.async();
     let command = `cd server && yarn install`;
     if (this.props.appType === 'fullstack') {
-      command = command + '&& cd ../client && yarn install';
+      command = command + '&& cd ../client && yarn install && yarn build';
     }
     shelljs.exec(command);
     done();
