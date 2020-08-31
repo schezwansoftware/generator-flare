@@ -4,6 +4,7 @@ const chalk = require("chalk");
 const yosay = require("yosay");
 const mkdirp = require("mkdirp");
 const path = require("path");
+const shelljs = require('shelljs');
 const packagejs = require(__dirname + "/../../package.json");
 const questions = 5;
 const clientBasePath = "client";
@@ -17,36 +18,36 @@ module.exports = class extends Generator {
     this.log(
       String(
         " \n" +
-          chalk.green("      ██████ ") +
-          chalk.red(" ██      ") +
-          chalk.yellow(" ████████ ") +
-          chalk.blue(" █████████  ") +
-          chalk.magenta(" ███████\n") +
-          chalk.green("      ██") +
-          chalk.red("      ██      ") +
-          chalk.yellow(" ██    ██ ") +
-          chalk.blue(" ██      ██ ") +
-          chalk.magenta(" ██      \n") +
-          chalk.green("      ██████ ") +
-          chalk.red(" ██      ") +
-          chalk.yellow(" ████████ ") +
-          chalk.blue(" █████████  ") +
-          chalk.magenta(" ███████    \n") +
-          chalk.green("      ██") +
-          chalk.red("      ██      ") +
-          chalk.yellow(" ██    ██ ") +
-          chalk.blue(" ██     ██  ") +
-          chalk.magenta(" ██        \n") +
-          chalk.green("      ██") +
-          chalk.red("      ████████") +
-          chalk.yellow(" ██    ██ ") +
-          chalk.blue(" ██      ██ ") +
-          chalk.magenta(" ███████       \n")
+        chalk.green("      ██████ ") +
+        chalk.red(" ██      ") +
+        chalk.yellow(" ████████ ") +
+        chalk.blue(" █████████  ") +
+        chalk.magenta(" ███████\n") +
+        chalk.green("      ██") +
+        chalk.red("      ██      ") +
+        chalk.yellow(" ██    ██ ") +
+        chalk.blue(" ██      ██ ") +
+        chalk.magenta(" ██      \n") +
+        chalk.green("      ██████ ") +
+        chalk.red(" ██      ") +
+        chalk.yellow(" ████████ ") +
+        chalk.blue(" █████████  ") +
+        chalk.magenta(" ███████    \n") +
+        chalk.green("      ██") +
+        chalk.red("      ██      ") +
+        chalk.yellow(" ██    ██ ") +
+        chalk.blue(" ██     ██  ") +
+        chalk.magenta(" ██        \n") +
+        chalk.green("      ██") +
+        chalk.red("      ████████") +
+        chalk.yellow(" ██    ██ ") +
+        chalk.blue(" ██      ██ ") +
+        chalk.magenta(" ███████       \n")
       )
     );
     this.log(
       chalk.white("Welcome to the Flare Generator ") +
-        chalk.yellow("v" + packagejs.version + "\n")
+      chalk.yellow("v" + packagejs.version + "\n")
     );
   }
 
@@ -59,7 +60,7 @@ module.exports = class extends Generator {
         name: "appName",
         message: "(1/" + questions + ") What is your Project Name?",
         default: this.appname,
-        validate: function(input) {
+        validate: function (input) {
           if (/^([a-zA-Z0-9_]*)$/.test(input)) return true;
           return "Your application name cannot contain special characters or a blank space, using the default name instead";
         }
@@ -71,14 +72,9 @@ module.exports = class extends Generator {
           "(2/" + questions + ") What kind of app are you looking to generate?",
         default: "service",
         choices: [
-          { name: "MicroService (NestJS)", value: "service" },
-          { name: "Fullstack (NESTJS + Angular) [Coming Soon!]", value: "fullstack" }
+          {name: "MicroService (NestJS)", value: "service"},
+          {name: "Fullstack (NESTJS + Angular)", value: "fullstack"}
         ],
-        validate: (input) => {
-          if (input !== 'service') {
-            return 'This feature will be added in the future release';
-          }
-        }
       },
       {
         type: "input",
@@ -140,7 +136,7 @@ module.exports = class extends Generator {
           }
         ],
         validate: (input) => {
-          if (input !== 'mongodb') {
+          if (input === 'cassandra') {
             return 'This feature will be added in the future release';
           }
         },
@@ -166,35 +162,45 @@ module.exports = class extends Generator {
     this.destinationRoot(path.join(this.destinationRoot(), '/' + appName));
     const templateDockerBasePath = `docker/${dbType}`;
     const templateServerBasePath = "server";
+    const templateClientBasePath = "client";
     this.fs.copyTpl(
       this.templatePath(templateDockerBasePath),
       this.destinationPath(`${dockerBasePath}/${dbType}`),
-      { appName, appPort, dbType }
+      {appName, appPort, dbType}
     );
 
     this.fs.copyTpl(
       this.templatePath(serverBasePath + "/.env"),
       this.destinationPath(serverBasePath + "/.env"),
-      { appName, appPort, dbType }
+      {appName, appPort, dbType}
     );
+    if (appType === 'fullstack') {
+      this.fs.copyTpl(
+        this.templatePath(clientBasePath),
+        this.destinationPath(clientBasePath),
+        {appName, appPort, dbType}
+      );
+    }
     this.fs.copyTpl(
       this.templatePath(".gitignore"),
       this.destinationPath(".gitignore"),
-      { appName, appPort, dbType }
+      {appName, appPort, dbType}
     );
 
     writeServerFiles.call(this, appName, appPort, dbType);
     this.config.set("appName", appName);
+    this.config.set("appType", appType);
     this.config.set("dbType", dbType);
   }
 
   install() {
-    var elementDir = `${this.destinationPath()}/${serverBasePath}`;
-    process.chdir(elementDir);
-    this.installDependencies({
-      npm: false,
-      bower: false,
-      yarn: true
-    });
+    var done = this.async();
+    let command = `cd server && yarn install`;
+    if (this.props.appType === 'fullstack') {
+      command = command + '&& cd ../client && yarn install';
+    }
+    shelljs.exec(command);
+    done();
   }
+
 };
