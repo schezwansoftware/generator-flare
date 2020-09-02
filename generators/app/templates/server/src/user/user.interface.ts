@@ -8,6 +8,8 @@ export interface IUser {
     readonly login: string;
     readonly authorities: string[];
     resetDate: Date;
+    activationKey: string;
+    activated: boolean;
     resetKey: string;
     password: string;
 }
@@ -21,6 +23,8 @@ export class User extends Document implements IUser {
     password: string;
     readonly authorities: string[];
     readonly resetDate: Date;
+    readonly activationKey: string;
+    readonly activated: boolean;
     readonly resetKey: string;
 }
 

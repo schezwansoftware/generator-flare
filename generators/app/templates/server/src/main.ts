@@ -3,6 +3,7 @@ import {AppModule} from './app.module';
 import {ArgumentsHost, Catch, ExceptionFilter, HttpException, NotFoundException, ValidationPipe} from '@nestjs/common';
 import {AuthGuard} from './auth/guards/auth.guard';
 import * as path from 'path';
+import * as contextService from 'request-context';
 import * as express from 'express';
 import * as fs from 'fs';
 import {resolve} from 'path';
@@ -27,6 +28,7 @@ import {resolve} from 'path';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const port = process.env.PORT || 3000;
+    app.use(contextService.middleware('request'));
     app.useGlobalPipes(new ValidationPipe());<% if (appType === 'fullstack') {%>
     const staticAssetsPath = path.join(__dirname, '../../client/dist/client');
     if (fs.existsSync(staticAssetsPath)) {

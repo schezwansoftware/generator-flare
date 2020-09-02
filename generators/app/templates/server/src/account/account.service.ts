@@ -39,6 +39,10 @@ export class AccountService {
         return this.tokenProvider.createToken(user);
     }
 
+    async activateAccount(activationKey: string): Promise<void> {
+      return this.userService.activateAccount(activationKey);
+    }
+
     async getAccount(): Promise<UserDTO> {
         return await this.userService.findOneWithAuthoritiesByEmail(SecurityUtils.getCurrentUserLoggedIn().email);
     }

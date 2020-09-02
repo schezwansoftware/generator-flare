@@ -28,4 +28,6 @@ export class UserDTO {
     login: string;
 
     authorities: string[];
+
+    activated: boolean;
 }

@@ -1,4 +1,4 @@
-import {BadRequestException, Body, Controller, Get, HttpStatus, Post, Res} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Post, Res, Put, Param} from '@nestjs/common';
 import {LoginVM} from './login.model';
 import {JWTToken} from '../auth/jwt/token.model';
 import {AccountService} from './account.service';
@@ -28,6 +28,13 @@ export class AccountController {
             result,
         });
     }
+
+  @Put('account/activate/:key')
+  @Public()
+  async activateAccount(@Res() res, @Param('key') activationKey: string) {
+    await this.accountService.activateAccount(activationKey);
+    return res.status(HttpStatus.OK).json({message: 'User has been activated'});
+  }
 
     @Get('account')
     async getAccount(@Res() res) {

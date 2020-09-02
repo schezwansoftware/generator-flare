@@ -33,6 +33,10 @@ constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
         return await this.userModel.findOne({email});
     }
 
+  async findByActivationKey(activationKey: string): Promise<IUser> {
+    return await this.userModel.findOne({activationKey});
+  }
+
     async findByEmailOrLogin(email: string): Promise<IUser> {
         return await this.userModel.findOne({$or: [{email}, {login: email}]});
     }

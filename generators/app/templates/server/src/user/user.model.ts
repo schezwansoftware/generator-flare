@@ -11,6 +11,8 @@ export const UserSchema = new mongoose.Schema({
     authorities: {type: [String], required: true},
     resetKey: String,
     resetDate: {type: String, default: Date.now()},
+    activated: {type: Boolean, default: false},
+    activationKey: {type: String}
 });
 
 

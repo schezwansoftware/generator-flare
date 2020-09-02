@@ -46,6 +46,11 @@ export class UserService {
         }
         let user: IUser = this.userMapper.mapUserDTOToUser(userDTO);
         user.password = password;
+        user.activationKey = randomString.generate({
+          length: 15,
+          charset: 'numeric',
+        });
+        user.activated = false;
         user = await this.userRepository.save(user);
         return user;
     }
@@ -69,6 +74,16 @@ export class UserService {
             return this.userMapper.mapUserToUserDTO(newUser);
         }
         throw new BadRequestException('Invalid id.');
+    }
+
+    async activateAccount(activationKey: string): Promise<void> {
+        const user = await this.userRepository.findByActivationKey(activationKey);
+        if (!user) {
+          throw new BadRequestException('Either the key is invalid or expired.');
+        }
+        user.activated = true;
+        user.activationKey = null;
+        await this.userRepository.update(user);
     }
 
     async findAllManagedUsers(): Promise<UserDTO[]> {

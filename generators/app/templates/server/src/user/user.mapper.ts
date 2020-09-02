@@ -14,6 +14,7 @@ export class UserMapper {
               email: user.email,
               login: user.login,
               authorities: user.authorities,
+              activated: user.activated,
               };
       }
 
@@ -28,6 +29,8 @@ export class UserMapper {
               authorities: user.authorities,
               resetKey: null,
               resetDate: null,
+              activated: user.activated,
+              activationKey: null,
               };
       }
 
