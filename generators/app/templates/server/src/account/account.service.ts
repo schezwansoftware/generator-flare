@@ -47,11 +47,12 @@ export class AccountService {
         return await this.userService.findOneWithAuthoritiesByEmail(SecurityUtils.getCurrentUserLoggedIn().email);
     }
 
-    async changePasswordRequest(accontDTO: UserDTO): Promise<UserDTO> {
-        return null;
+    async changePasswordRequest(email: string): Promise<void> {
+      const user = await this.userService.resetPasswordInit(email);
+      this.mailService.sendPasswordResetEmail(user);
     }
 
-    async changePasswordFinish(accontDTO: UserDTO): Promise<UserDTO> {
-        return null;
+    async changePasswordFinish(resetKey: string, newPassword: string): Promise<void> {
+      return this.userService.passwordResetFinish(resetKey, newPassword);
     }
 }

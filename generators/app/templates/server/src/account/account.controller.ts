@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpStatus, Post, Res, Put, Param} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Post, Res, Put, Param, BadRequestException} from '@nestjs/common';
 import {LoginVM} from './login.model';
 import {JWTToken} from '../auth/jwt/token.model';
 import {AccountService} from './account.service';
@@ -36,11 +36,29 @@ export class AccountController {
     return res.status(HttpStatus.OK).json({message: 'User has been activated'});
   }
 
-    @Get('account')
-    async getAccount(@Res() res) {
-        const result: UserDTO = await this.accountService.getAccount();
-        return res.status(HttpStatus.OK).json({
-            result,
-        });
+  @Get('account')
+  async getAccount(@Res() res) {
+      const result: UserDTO = await this.accountService.getAccount();
+      return res.status(HttpStatus.OK).json({
+          result,
+      });
+  }
+
+  @Post('account/password-reset/init/:email')
+  @Public()
+  async passwordResetInit(@Res() res, @Param('email') email: string) {
+    await this.accountService.changePasswordRequest(email);
+    return res.status(HttpStatus.OK).json({message: 'Password Reset link sent to registered email.'});
+  }
+
+  @Post('account/password-reset/finish')
+  @Public()
+  async passwordResetFinish(@Res() res, @Body() data: any) {
+    const {resetKey, newPassword} = data;
+    if (!resetKey || !newPassword) {
+      throw new BadRequestException('Reset Key or password is missing');
     }
+    await this.accountService.changePasswordFinish(resetKey, newPassword);
+    return res.status(HttpStatus.OK).json({message: 'Password Reset link sent to registered email.'});
+  }
 }

@@ -6,19 +6,23 @@ import {MailerService} from '@nestjs-modules/mailer';
 @Injectable()
 export class MailService {
 
-    constructor(private mailerService: MailerService) {}
+  constructor(private mailerService: MailerService) {}
 
-    private async sendEmailFromTemplate(user: IUser, template: string, subject: string): Promise<void> {
-        this.mailerService.sendMail({
-            to: user.email,
-            from: MAIL_FROM,
-            template: 'welcome',
-            context: {user},
-            subject,
-        });
-    }
+  private async sendEmailFromTemplate(user: IUser, template: string, subject: string): Promise<void> {
+    this.mailerService.sendMail({
+      to: user.email,
+      from: MAIL_FROM,
+      template: template,
+      context: {user},
+      subject,
+    });
+  }
 
-    async sendCreationEmail(user: IUser): Promise<void> {
-        return await this.sendEmailFromTemplate(user, 'welcome', 'User Creation Email');
-    }
+  async sendCreationEmail(user: IUser): Promise<void> {
+    return await this.sendEmailFromTemplate(user, 'welcome', 'User Creation Email');
+  }
+
+  async sendPasswordResetEmail(user: IUser): Promise<void> {
+    return await this.sendEmailFromTemplate(user, 'passwordReset', 'User Password Reset Email');
+  }
 }

@@ -2,6 +2,7 @@ import {BadRequestException, HttpException, HttpStatus, Injectable} from '@nestj
 import {UserDTO} from './user.dto';
 import {UserMapper} from './user.mapper';
 import {IUser} from './user.interface';
+import * as bcrypt from 'bcrypt';
 import * as randomString from 'randomstring';
 import {USER} from '../auth/security/authority.constants';
 <% if (dbType === 'mongodb') {%>import {UserRepository} from './user.repository';
@@ -84,6 +85,38 @@ export class UserService {
         user.activated = true;
         user.activationKey = null;
         await this.userRepository.update(user);
+    }
+
+    async resetPasswordInit(email: string): Promise<IUser> {
+      const user = await this.userRepository.findByEmail(email);
+      if (!user) {
+        throw new BadRequestException('This email doesn\'t exist.');
+      }
+      user.resetKey = randomString.generate({
+        length: 15,
+        charset: 'numeric',
+      });
+      var resetDate = new Date();
+      resetDate.setDate(resetDate.getDate() + 1);
+      user.resetDate = resetDate;
+      return await this.userRepository.update(user);
+    }
+
+    async passwordResetFinish(resetKey: string, newPassword: string): Promise<void> {
+      const user = await this.userRepository.findByResetKey(resetKey);
+      if (!user) {
+        throw new BadRequestException('Invalid Reset password link');
+      }
+      const currentDate = new Date();
+      const userResetDate = new Date(user.resetDate);
+      if (user.resetKey && userResetDate > currentDate) {
+        user.resetDate = null;
+        user.resetKey = null;
+        user.password = await bcrypt.hash(newPassword, 10);
+        await this.userRepository.update(user);
+      } else {
+        throw new BadRequestException('The reset password link has expired. Your password couldn\'t be reset. Remember a password request is only valid for 24 hours.');
+      }
     }
 
     async findAllManagedUsers(): Promise<UserDTO[]> {
