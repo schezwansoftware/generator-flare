@@ -161,8 +161,6 @@ module.exports = class extends Generator {
     mkdirp(appName);
     this.destinationRoot(path.join(this.destinationRoot(), '/' + appName));
     const templateDockerBasePath = `docker/${dbType}`;
-    const templateServerBasePath = "server";
-    const templateClientBasePath = "client";
     this.fs.copyTpl(
       this.templatePath(templateDockerBasePath),
       this.destinationPath(`${dockerBasePath}/${dbType}`),
@@ -178,6 +176,11 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath(clientBasePath),
         this.destinationPath(clientBasePath),
+        {appName, appPort, dbType}
+      );
+      this.fs.copyTpl(
+        this.templatePath(clientBasePath + '/.gitignore'),
+        this.destinationPath(clientBasePath + '/.gitignore'),
         {appName, appPort, dbType}
       );
     }
@@ -200,6 +203,8 @@ module.exports = class extends Generator {
       command = command + '&& cd ../client && yarn install && yarn build';
     }
     shelljs.exec(command);
+    const gitCommand = 'git init && git add --all && git commit -m "initial application generated using flare:0.1.0"'
+    shelljs.exec(gitCommand);
     done();
   }
 

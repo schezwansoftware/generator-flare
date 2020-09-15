@@ -29,7 +29,7 @@ function writeBaseFiles(appName, appPort, dbType, appType) {
   );
   this.fs.copyTpl(
     this.templatePath('.gitignore'),
-    this.destinationPath(serverBasePath + '.gitignore'),
+    this.destinationPath(serverBasePath + '/.gitignore'),
     {appName, appPort, dbType, appType}
   );
   for (const file of commonConfigFiles) {
