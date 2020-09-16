@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="card">
+        <h3 class="card-title text-center">Activation</h3>
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="alert alert-success" *ngIf="success">
+                        <span ><strong>Your user account has been activated.</strong> Please </span>
+                        <a class="alert-link" routerLink="/login">Sign in</a>.
+                    </div>
+
+                    <div class="alert alert-danger" *ngIf="error">
+                        <strong>Your user could not be activated.</strong> Please use the registration form to sign up.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

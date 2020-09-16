@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <a class="navbar-brand" href="#">Flare</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+          aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor02" [ngbCollapse]="isNavbarCollapsed"  [ngSwitch]="isAuthenticated()">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
+                    <span>
+                       <i class="fa fa-home"></i>
+                       <span>Home</span>
+                    </span>
+        </a>
+      </li>
+      <li ngbDropdown class="nav-item dropdown pointer" placement="bottom-right"
+          routerLinkActive="active text-primary" [routerLinkActiveOptions]="{exact: true}">
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
+                    <span>
+                         <i class="fa fa-user-circle"></i>
+                        <span>
+                            Account
+                        </span>
+                    </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
+          <li *ngSwitchCase="true">
+            <a class="dropdown-item" routerLink="settings" routerLinkActive="active text-primary"
+               (click)="collapseNavbar()">
+              <fa-icon icon="wrench" fixedWidth="true"></fa-icon>
+              <span >Settings</span>
+            </a>
+          </li>
+          <li *ngSwitchCase="true">
+            <a class="dropdown-item" routerLink="password" routerLinkActive="active text-primary"
+               (click)="collapseNavbar()">
+              <fa-icon icon="lock" fixedWidth="true"></fa-icon>
+              <span >Password</span>
+            </a>
+          </li>
+          <li *ngSwitchCase="true">
+            <a class="dropdown-item logout-link" (click)="logout()" id="logout">
+              <fa-icon icon="sign-out-alt" fixedWidth="true"></fa-icon>
+              <span>Sign out</span>
+            </a>
+          </li>
+          <li *ngSwitchCase="false">
+            <a class="dropdown-item" routerLink="login" routerLinkActive="active text-white">
+              <i class="fa fa-sign-in"></i>
+              &nbsp;<span>Sign In</span>
+            </a>
+          </li>
+          <li *ngSwitchCase="false">
+            <a class="dropdown-item" routerLink="register" routerLinkActive="active text-white">
+              <i class="fa fa-registered"></i>
+              &nbsp;<span>Register</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
