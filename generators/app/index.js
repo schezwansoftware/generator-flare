@@ -185,7 +185,7 @@ module.exports = class extends Generator {
       );
     }
     this.fs.copyTpl(
-      this.templatePath(".gitignore"),
+      this.templatePath("_root_gitignore"),
       this.destinationPath(".gitignore"),
       {appName, appPort, dbType}
     );

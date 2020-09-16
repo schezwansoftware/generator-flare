@@ -44,6 +44,14 @@ export class AccountController {
       });
   }
 
+  @Put('account')
+  async updateAccount(@Res() res, @Body() userDTO: UserDTO) {
+    const result: UserDTO = await this.accountService.updateAccount(userDTO);
+    return res.status(HttpStatus.OK).json({
+      result,
+    });
+  }
+
   @Post('account/password-reset/init/:email')
   @Public()
   async passwordResetInit(@Res() res, @Param('email') email: string) {

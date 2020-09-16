@@ -28,7 +28,7 @@ function writeBaseFiles(appName, appPort, dbType, appType) {
     {appName, appPort, dbType, appType}
   );
   this.fs.copyTpl(
-    this.templatePath('.gitignore'),
+    this.templatePath('_root_gitignore'),
     this.destinationPath(serverBasePath + '/.gitignore'),
     {appName, appPort, dbType, appType}
   );

@@ -2,11 +2,11 @@
 
 export interface IUser {
     readonly id: string;
-    readonly firstName: string;
-    readonly lastName: string;
-    readonly email: string;
-    readonly login: string;
-    readonly authorities: string[];
+    firstName: string;
+    lastName: string;
+    email: string;
+    login: string;
+    authorities: string[];
     resetDate: Date;
     activationKey: string;
     activated: boolean;

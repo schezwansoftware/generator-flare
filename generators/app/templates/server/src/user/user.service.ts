@@ -5,6 +5,7 @@ import {IUser} from './user.interface';
 import * as bcrypt from 'bcrypt';
 import * as randomString from 'randomstring';
 import {USER} from '../auth/security/authority.constants';
+import {SecurityUtils} from "../auth/security/security.utils";
 <% if (dbType === 'mongodb') {%>import {UserRepository} from './user.repository';
   <%}%><% if (dbType === 'mysql') {%>import {UsersRepository as UserRepository} from './user.repository';
   <%}%>
@@ -56,26 +57,23 @@ export class UserService {
         return user;
     }
 
-    async updateUser(userDTO: UserDTO): Promise<UserDTO> {
-        let existingUser = await this.userRepository.findByEmail(userDTO.email);
-        if (existingUser && existingUser.id !== userDTO.id) {
-            throw new BadRequestException('A User is already registered with this email');
-        }
-        existingUser = await this.userRepository.findByLogin(userDTO.login);
-        if (existingUser && existingUser.id !== userDTO.id) {
-            throw new BadRequestException('A User is already registered with this user');
-        }
-        existingUser = await this.userRepository.findById(userDTO.id);
-        if (existingUser) {
-            let newUser: IUser = this.userMapper.mapUserDTOToUser(userDTO);
-            newUser.password = existingUser.password;
-            newUser.resetDate = existingUser.resetDate;
-            newUser.resetKey = existingUser.resetKey;
-            newUser = await this.userRepository.save(newUser);
-            return this.userMapper.mapUserToUserDTO(newUser);
-        }
-        throw new BadRequestException('Invalid id.');
+  async updateUser(userDTO: UserDTO): Promise<UserDTO> {
+    if (SecurityUtils.getCurrentUserLoggedIn() && SecurityUtils.getCurrentUserLoggedIn().id) {
+      const existingUser: IUser = await this.userRepository.findByEmail(userDTO.email);
+      if (existingUser && existingUser.id !== SecurityUtils.getCurrentUserLoggedIn().id) {
+        throw new BadRequestException('Email Already exists.');
+      }
+      let currentUser = await this.userRepository.findById(SecurityUtils.getCurrentUserLoggedIn().id);
+      if (currentUser) {
+        currentUser.email = userDTO.email;
+        currentUser.firstName = userDTO.firstName;
+        currentUser.lastName = userDTO.lastName;
+        currentUser = await this.userRepository.update(currentUser);
+        return this.userMapper.mapUserToUserDTO(currentUser);
+      }
     }
+    throw new BadRequestException('Invalid id.');
+  }
 
     async activateAccount(activationKey: string): Promise<void> {
         const user = await this.userRepository.findByActivationKey(activationKey);

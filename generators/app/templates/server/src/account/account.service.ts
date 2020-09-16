@@ -47,6 +47,10 @@ export class AccountService {
         return await this.userService.findOneWithAuthoritiesByEmail(SecurityUtils.getCurrentUserLoggedIn().email);
     }
 
+    async updateAccount(userDTO: UserDTO): Promise<UserDTO> {
+      return await this.userService.updateUser(userDTO);
+    }
+
     async changePasswordRequest(email: string): Promise<void> {
       const user = await this.userService.resetPasswordInit(email);
       this.mailService.sendPasswordResetEmail(user);
