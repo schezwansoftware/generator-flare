@@ -23,11 +23,13 @@ import {
 import {AccountModule} from './account/account.module';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthInterceptor} from './shared/auth/auth.interceptor';
+import { ErrorComponent } from './layouts/error/error.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
