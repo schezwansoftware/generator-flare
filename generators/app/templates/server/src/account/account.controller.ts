@@ -9,25 +9,26 @@ import {ManagedUserVM} from './managed-user.dto';
 @Controller('api')
 export class AccountController {
 
-    constructor(private accountService: AccountService) {
-    }
+  constructor(private accountService: AccountService) {
+  }
 
-    @Post('register')
-    @Public()
-    async register(@Res() res, @Body() managedUserVM: ManagedUserVM) {
-        await this.accountService.register(managedUserVM, managedUserVM.password);
-        return res.status(HttpStatus.CREATED).json({
-            message: 'User has been registered.',
-        });
-    }
-    @Post('authenticate')
-    @Public()
-    async authenticate(@Res() res, @Body() loginVM: LoginVM) {
-        const result: JWTToken = await this.accountService.authenticate(loginVM);
-        return res.status(HttpStatus.OK).json({
-            result,
-        });
-    }
+  @Post('register')
+  @Public()
+  async register(@Res() res, @Body() managedUserVM: ManagedUserVM) {
+    await this.accountService.register(managedUserVM, managedUserVM.password);
+    return res.status(HttpStatus.CREATED).json({
+      message: 'User has been registered.',
+    });
+  }
+
+  @Post('authenticate')
+  @Public()
+  async authenticate(@Res() res, @Body() loginVM: LoginVM) {
+    const result: JWTToken = await this.accountService.authenticate(loginVM);
+    return res.status(HttpStatus.OK).json({
+      result,
+    });
+  }
 
   @Put('account/activate/:key')
   @Public()
@@ -38,10 +39,10 @@ export class AccountController {
 
   @Get('account')
   async getAccount(@Res() res) {
-      const result: UserDTO = await this.accountService.getAccount();
-      return res.status(HttpStatus.OK).json({
-          result,
-      });
+    const result: UserDTO = await this.accountService.getAccount();
+    return res.status(HttpStatus.OK).json({
+      result,
+    });
   }
 
   @Put('account')
@@ -49,6 +50,18 @@ export class AccountController {
     const result: UserDTO = await this.accountService.updateAccount(userDTO);
     return res.status(HttpStatus.OK).json({
       result,
+    });
+  }
+
+  @Put('account/change-password')
+  async changePassword(@Res() res, @Body() userPasswords: any) {
+    const {newPassword, oldPassword} = userPasswords;
+    if (!newPassword || !oldPassword) {
+      throw new BadRequestException('Missing body parameters');
+    }
+    await this.accountService.changePassword(newPassword, oldPassword);
+    return res.status(HttpStatus.OK).json({
+      message: 'Password changed Successfully',
     });
   }
 

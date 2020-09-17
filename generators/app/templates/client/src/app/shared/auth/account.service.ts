@@ -132,5 +132,9 @@ export class AccountService {
 
     passwordResetFinish(data: any) {
       return this.http.post<any>('/api/account/password-reset/finish/', data, {observe: 'response'});
-  }
+    }
+
+    changePassword(newPassword: string, oldPassword: string) {
+      return this.http.put<any>('/api/account/change-password', {newPassword, oldPassword}, {observe: 'response'});
+    }
 }

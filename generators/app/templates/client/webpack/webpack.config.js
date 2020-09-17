@@ -12,7 +12,7 @@ module.exports = {
       context: [
         '/api',
       ],
-      target: `http://localhost:5000/`,
+      target:'http://localhost:<%=appPort%>',
       secure: false,
       changeOrigin: true
     }],

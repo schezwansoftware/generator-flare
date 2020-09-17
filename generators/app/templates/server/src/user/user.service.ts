@@ -117,6 +117,19 @@ export class UserService {
       }
     }
 
+    async changePassword(newPassword: string, oldPassword: string): Promise<void> {
+      if (oldPassword === newPassword) {
+        throw new BadRequestException('Old Password and New password cannot be same');
+      }
+      const user = await this.findOneWithAuthorities();
+      if (user && await this.validatePassword(oldPassword, user)) {
+        user.password = await bcrypt.hash(newPassword, 10);
+        await this.userRepository.update(user);
+        return;
+      }
+      throw new BadRequestException('Invalid old password.');
+    }
+
     async findAllManagedUsers(): Promise<UserDTO[]> {
         const users: IUser[] = await this.userRepository.findAll();
         return this.userMapper.mapUserToUserDTOList(users);
@@ -138,6 +151,13 @@ export class UserService {
         throw new BadRequestException('Invalid Email.');
     }
 
+    async findOneWithAuthorities(): Promise<IUser> {
+      if (SecurityUtils.getCurrentUserLoggedIn()) {
+      return await this.userRepository.findById(SecurityUtils.getCurrentUserLoggedIn().id);
+      }
+      return null;
+    }
+
     async findOneWithAuthoritiesByEmailOrLogin(email: string): Promise<IUser> {
         return await this.userRepository.findByEmailOrLogin(email);
     }
@@ -152,6 +172,10 @@ export class UserService {
 
     async deleteUser(<% if (dbType === 'mongodb') {%>id: string<%}%><% if (dbType === 'mysql') {%>id: number<%}%>): Promise<void> {
         return await this.userRepository.deleteById(id);
+    }
+
+    private async validatePassword(password: string, user: IUser): Promise<boolean> {
+      return await bcrypt.compare(password, user.password);
     }
 
     <% if (dbType === 'mysql') {%>

@@ -16,47 +16,51 @@ import {MailService} from '../shared/services/mail.service';
 @Injectable()
 export class AccountService {
 
-    constructor(private userService: UserService, private tokenProvider: TokenProvider, private mailService: MailService) {
-    }
+  constructor(private userService: UserService, private tokenProvider: TokenProvider, private mailService: MailService) {
+  }
 
-    async register(userDTO: UserDTO, password: string): Promise<void> {
-        if (!userDTO.authorities || userDTO.authorities.length === 0) {
-            userDTO.authorities = [USER];
-        }
-        const user = await this.userService.registerUser(userDTO, password);
-        this.mailService.sendCreationEmail(user);
+  async register(userDTO: UserDTO, password: string): Promise<void> {
+    if (!userDTO.authorities || userDTO.authorities.length === 0) {
+      userDTO.authorities = [USER];
     }
+    const user = await this.userService.registerUser(userDTO, password);
+    this.mailService.sendCreationEmail(user);
+  }
 
-    async authenticate(loginVM: LoginVM): Promise<JWTToken> {
-        const user: IUser = await this.userService.findOneWithAuthoritiesByEmailOrLogin(loginVM.username);
-        if (!user) {
-            throw new UnauthorizedException('User not found');
-        }
-        const isvalidPassword = await bcrypt.compare(loginVM.password, user.password);
-        if (!isvalidPassword) {
-            throw new UnauthorizedException('Invalid username/password.');
-        }
-        return this.tokenProvider.createToken(user);
+  async authenticate(loginVM: LoginVM): Promise<JWTToken> {
+    const user: IUser = await this.userService.findOneWithAuthoritiesByEmailOrLogin(loginVM.username);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
     }
+    const isvalidPassword = await bcrypt.compare(loginVM.password, user.password);
+    if (!isvalidPassword) {
+      throw new UnauthorizedException('Invalid username/password.');
+    }
+    return this.tokenProvider.createToken(user);
+  }
 
-    async activateAccount(activationKey: string): Promise<void> {
-      return this.userService.activateAccount(activationKey);
-    }
+  async activateAccount(activationKey: string): Promise<void> {
+    return this.userService.activateAccount(activationKey);
+  }
 
-    async getAccount(): Promise<UserDTO> {
-        return await this.userService.findOneWithAuthoritiesByEmail(SecurityUtils.getCurrentUserLoggedIn().email);
-    }
+  async getAccount(): Promise<UserDTO> {
+    return await this.userService.findOneWithAuthoritiesByEmail(SecurityUtils.getCurrentUserLoggedIn().email);
+  }
 
-    async updateAccount(userDTO: UserDTO): Promise<UserDTO> {
-      return await this.userService.updateUser(userDTO);
-    }
+  async updateAccount(userDTO: UserDTO): Promise<UserDTO> {
+    return await this.userService.updateUser(userDTO);
+  }
 
-    async changePasswordRequest(email: string): Promise<void> {
-      const user = await this.userService.resetPasswordInit(email);
-      this.mailService.sendPasswordResetEmail(user);
-    }
+  async changePassword(newPassword: string, oldPassword: string): Promise<void> {
+    return await this.userService.changePassword(newPassword, oldPassword);
+  }
 
-    async changePasswordFinish(resetKey: string, newPassword: string): Promise<void> {
-      return this.userService.passwordResetFinish(resetKey, newPassword);
-    }
+  async changePasswordRequest(email: string): Promise<void> {
+    const user = await this.userService.resetPasswordInit(email);
+    this.mailService.sendPasswordResetEmail(user);
+  }
+
+  async changePasswordFinish(resetKey: string, newPassword: string): Promise<void> {
+    return this.userService.passwordResetFinish(resetKey, newPassword);
+  }
 }
