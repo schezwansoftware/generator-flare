@@ -7,12 +7,14 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent implements OnInit {
+  title: string;
   error: string;
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       this.error = data.errorMessage;
+      this.title = data.title;
     });
   }
 
