@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {IUser} from '../../user/user.interface';
-import {MAIL_FROM} from '../../app.constants';
+import {MAIL_BASE_URL, MAIL_FROM} from '../../app.constants';
 import {MailerService} from '@nestjs-modules/mailer';
 
 @Injectable()
@@ -8,21 +8,24 @@ export class MailService {
 
   constructor(private mailerService: MailerService) {}
 
-  private async sendEmailFromTemplate(user: IUser, template: string, subject: string): Promise<void> {
+  private async sendEmailFromTemplate(email: string, context: any, template: string, subject: string): Promise<void> {
     this.mailerService.sendMail({
-      to: user.email,
+      to: email,
       from: MAIL_FROM,
-      template: template,
-      context: {user},
+      template,
+      context,
       subject,
     });
   }
 
   async sendCreationEmail(user: IUser): Promise<void> {
-    return await this.sendEmailFromTemplate(user, 'welcome', 'User Creation Email');
+    const userName = user.firstName || user.login;
+    const url = `${MAIL_BASE_URL}/activate?key=${user.activationKey}`;
+    return await this.sendEmailFromTemplate(user.email, {userName, url}, 'welcome', 'User Creation Email');
   }
 
   async sendPasswordResetEmail(user: IUser): Promise<void> {
-    return await this.sendEmailFromTemplate(user, 'passwordReset', 'User Password Reset Email');
-  }
+    const userName = user.firstName || user.login;
+    const url = `${MAIL_BASE_URL}/password-reset/finish?key=${user.resetKey}`;
+    return await this.sendEmailFromTemplate(user.email, {userName, url}, 'passwordReset', 'User Password Reset Email');  }
 }
