@@ -2,9 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {<%= entityInterfaceName %>} from '../../shared/model/<%= baseName %>.model';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import * as moment from 'moment';
-
+<% if (hasDateField) {%>import {map} from 'rxjs/operators';<%}%>
+<% if (hasDateField) {%>import * as moment from 'moment';<%}%>
 type EntityResponseType = HttpResponse<<%= entityInterfaceName %>>;
 type EntityArrayResponseType = HttpResponse<<%= entityInterfaceName %>[]>;
 
