@@ -373,8 +373,8 @@ module.exports = class extends Generator {
     for (const field of config.generatedFields) {
       if (field.fieldType === 'Date') {
         hasDateField = true;
-        break;
       }
+      field.fieldTitle = _.startCase(field.fieldName);
     }
     const entityInterfaceName = `I${_.startCase(_.toLower(config.entityName))}`;
     const entityTitlePlural = `${_.startCase(pluralize(config.entityName))}`;
@@ -390,14 +390,20 @@ module.exports = class extends Generator {
     const entityPath = clientEntityBasePath + '/' + config.baseName;
     const componentHTML = `${config.baseName}.component.html`;
     const componentTS = `${config.baseName}.component.ts`;
+    const serviceTS = `${config.baseName}.service.ts`;
     if (!fileSystem.existsSync(entityPath)) {
       fileSystem.mkdirSync(entityPath);
     }
-    // this.fs.copyTpl(
-    //   this.templatePath("client/_component.ts.ejs"),
-    //   this.destinationPath(entityPath + '/' + componentTS),
-    //   config
-    // );
+    this.fs.copyTpl(
+      this.templatePath("client/_component.ts.ejs"),
+      this.destinationPath(entityPath + '/' + componentTS),
+      config
+    );
+    this.fs.copyTpl(
+      this.templatePath("client/_service.ts.ejs"),
+      this.destinationPath(entityPath + '/' + serviceTS),
+      config
+    );
     this.fs.copyTpl(
       this.templatePath("client/_component.html.ejs"),
       this.destinationPath(entityPath + '/' + componentHTML),

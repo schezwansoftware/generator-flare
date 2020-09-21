@@ -1,0 +1,29 @@
+import {Component, OnInit} from '@angular/core';
+import {<%= entityClassName %>Service} from './<%= baseName %>.service';
+import {<%= entityInterfaceName %>} from '../../shared/model/<%= baseName %>.model';
+
+@Component({
+    selector: 'app-<%= baseName %>',
+    templateUrl: './<%= baseName %>.component.html',
+    styleUrls: []
+})
+export class <%= entityClassName %>Component implements OnInit {
+    <%= entityArrayVariableName %>: <%= entityInterfaceName %>[] = [];
+
+    constructor(private <%= entityName %>Service: <%= entityClassName %>Service) {
+    }
+
+    ngOnInit() {
+        this.loadAll();
+    }
+
+    trackId(index: number, item: <%= entityInterfaceName %>) {
+        return item.id;
+    }
+
+    private loadAll() {
+        this.<%= entityName %>Service.query().subscribe(res => {
+            this.<%= entityArrayVariableName %> = res.body;
+        });
+    }
+}
