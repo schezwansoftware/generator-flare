@@ -391,6 +391,7 @@ module.exports = class extends Generator {
     const componentHTML = `${config.baseName}.component.html`;
     const componentTS = `${config.baseName}.component.ts`;
     const serviceTS = `${config.baseName}.service.ts`;
+    const componentUpdateTS = `${config.baseName}-update.component.ts`;
     if (!fileSystem.existsSync(entityPath)) {
       fileSystem.mkdirSync(entityPath);
     }
@@ -407,6 +408,11 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("client/_component.html.ejs"),
       this.destinationPath(entityPath + '/' + componentHTML),
+      config
+    );
+    this.fs.copyTpl(
+      this.templatePath("client/_component.update.ts.ejs"),
+      this.destinationPath(entityPath + '/' + componentUpdateTS),
       config
     );
   }

@@ -1,0 +1,77 @@
+import {Component, OnInit} from '@angular/core';
+import {<%= entityClassName %>Service} from './<%= baseName %>.service';
+import {ActivatedRoute} from '@angular/router';
+import {FormBuilder} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {<%= entityInterfaceName %>, <%= entityClassName %>} from '../../shared/model/<%= baseName %>.model';
+<% if (hasDateField) {%>import {DATE_TIME_FORMAT} from '../../app.component';<%}%>
+<% if (hasDateField) {%>import * as moment from 'moment';<%}%>
+@Component({
+    selector: 'app-<%= baseName %>-update',
+    templateUrl: './<%= baseName %>-update.component.html',
+    styleUrls: []
+})
+export class <%= entityClassName %>UpdateComponent implements OnInit {
+    isSaving: boolean;
+
+    editForm = this.fb.group({
+        id: [],
+        <%for (const field of generatedFields) { %><%-field.fieldName-%>: [],
+        <% } %>});
+
+    constructor(protected <%= entityName %>Service: <%= entityClassName %>Service, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {
+    }
+
+    ngOnInit() {
+        this.isSaving = false;
+        this.activatedRoute.data.subscribe(({<%= entityName %>}) => {
+            this.updateForm(<%= entityName %>);
+        });
+    }
+
+    updateForm(<%= entityName %>: <%= entityInterfaceName %>) {
+        this.editForm.patchValue({
+            id: <%- entityName %>.id,
+            <%for (const field of generatedFields) { %><% if(field.fieldType !== 'Date') {%><%-field.fieldName-%>: <%- entityName -%>.<%-field.fieldName-%>,<%}%><% if(field.fieldType === 'Date') {%><%-field.fieldName-%>: <%- entityName -%>.<%-field.fieldName-%> != null ? <%- entityName -%>.<%-field.fieldName-%> : null,<%}%>
+            <% } %>});
+    }
+
+    previousState() {
+        window.history.back();
+    }
+
+    save() {
+        this.isSaving = true;
+        const <%= entityName %> = this.createFromForm();
+        if (<%= entityName %>.id !== undefined) {
+            this.subscribeToSaveResponse(this.<%= entityName %>Service.update(<%= entityName %>));
+        } else {
+            this.subscribeToSaveResponse(this.<%= entityName %>Service.create(<%= entityName %>));
+        }
+    }
+
+    private createFromForm(): <%= entityInterfaceName %> {
+        const entity = {
+             ...new <%= entityClassName %>(),
+             id: this.editForm.get(['id']).value,
+             <%for (const field of generatedFields) { %><% if(field.fieldType !== 'Date') {%><%-field.fieldName-%>: this.editForm.get('<%-field.fieldName-%>').value,<%}%><% if(field.fieldType === 'Date') {%><%-field.fieldName-%>: this.editForm.get('<%-field.fieldName-%>').value != null ?
+                moment(this.editForm.get(['<%-field.fieldName-%>']).value, DATE_TIME_FORMAT) : undefined,<%}%>
+             <% } %>};
+        return entity;
+    }
+
+    protected subscribeToSaveResponse(result: Observable<HttpResponse<<%= entityInterfaceName %>>>) {
+        result.subscribe((res: HttpResponse<<%= entityInterfaceName %>>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+    }
+
+    protected onSaveSuccess() {
+        this.isSaving = false;
+        this.previousState();
+    }
+
+    protected onSaveError() {
+        this.isSaving = false;
+    }
+
+}
