@@ -24,6 +24,7 @@ import {AccountModule} from './account/account.module';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthInterceptor} from './shared/auth/auth.interceptor';
 import { ErrorComponent } from './layouts/error/error.component';
+import {EntityModule} from './entity/entity.module';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { ErrorComponent } from './layouts/error/error.component';
     AppRoutingModule,
     HomeModule,
     SharedModule.forRoot(),
+    EntityModule,
     AccountModule
   ],
   providers: [

@@ -1,0 +1,31 @@
+<% if (hasDateField) {%>import {Moment} from 'moment';<%}%>
+export interface <%= entityInterfaceName %> {
+  id?: string;
+  <% for (const field of generatedFields) { %><%= field.fieldName %>?: <%= getType(field.fieldType) %>;
+  <% } %>}
+
+export class <%= entityClassName %> implements <%= entityInterfaceName %> {
+  constructor(
+   public id?: string,
+  <%for (const field of generatedFields) { %> public <%=field.fieldName %>?: <%= getType(field.fieldType) %>,
+  <% } %>) {}
+}
+
+<%
+function getType(type) {
+    switch (type) {
+        case "String":
+            return "string";
+        case "Date":
+            return "Moment";
+        case "Boolean":
+            return "boolean";
+        case "ObjectId":
+            return "string";
+        case "Number":
+            return "number";
+        default:
+            return "string";
+    }
+}
+%>

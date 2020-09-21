@@ -100,6 +100,7 @@ module.exports = class extends Generator {
     const entityRepository = `${baseName}.repository.ts`;
     const entitydir = entityBasePath + "/" + baseName;
     const config = {
+      baseName,
       entityName: this.entityName,
       entityClassName: entityClassName,
       entityBaseFileName: baseName,
@@ -176,6 +177,10 @@ module.exports = class extends Generator {
       });
     }
     this._cpEntityConfig();
+    const appType = this.config.get("appType");
+    if (appType === 'fullstack') {
+      this._writeClientFiles(config);
+    }
   }
 
   install() {
@@ -358,4 +363,27 @@ module.exports = class extends Generator {
     }
   }
 
+  _writeClientFiles(config) {
+    const clientBasePath = this.destinationPath() + "/client/src/app/";
+    const clientEntityBasePath = this.destinationPath() + "/client/src/app/entity";
+    if (!fileSystem.existsSync(clientEntityBasePath)) {
+      fileSystem.mkdirSync(clientEntityBasePath);
+    }
+    let hasDateField = false;
+    for (const field of config.generatedFields) {
+      if (field.fieldType === 'Date') {
+        hasDateField = true;
+        break;
+      }
+    }
+    const entityInterfaceName = `I${_.startCase(_.toLower(config.entityName))}`;
+    const entitySingleVariableName = `${_.startCase(_.toLower(config.entityName))}`;
+    const entityArrayVariableName = `${pluralize(this.entityName)}`;
+    config = {...config, entitySingleVariableName, entityArrayVariableName, entityInterfaceName, hasDateField};
+    this.fs.copyTpl(
+      this.templatePath("client/_model.ts.ejs"),
+      this.destinationPath(clientBasePath + "/" + 'shared/model/' + config.baseName + '.model.ts'),
+      config
+    );
+  }
 };
