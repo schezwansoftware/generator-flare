@@ -1,6 +1,6 @@
 {
   "name": "generator-flare",
-  "version": "0.0.3",
+  "version": "0.1.1",
   "description": "Open Source Scaffolding tool for creating NestJs + Angular projects in seconds! ",
   "homepage": "https://www.google.com",
   "author": {
