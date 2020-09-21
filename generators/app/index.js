@@ -179,7 +179,7 @@ module.exports = class extends Generator {
         {appName, appPort, dbType}
       );
       this.fs.copyTpl(
-        this.templatePath(clientBasePath + '/.gitignore'),
+        this.templatePath('_root_gitignore'),
         this.destinationPath(clientBasePath + '/.gitignore'),
         {appName, appPort, dbType}
       );
