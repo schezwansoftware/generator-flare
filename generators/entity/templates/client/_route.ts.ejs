@@ -40,7 +40,7 @@ export const <%= entityRouteName %>_ROUTES: Routes = [
         path: 'new',
         component: <%= entityClassName %>UpdateComponent,
         resolve: {
-            student: <%= entityClassName %>Resolve
+            <%= entityName %>: <%= entityClassName %>Resolve
         },
         data: {
             authorities: ['ROLE_USER'],
@@ -51,7 +51,7 @@ export const <%= entityRouteName %>_ROUTES: Routes = [
         path: ':id/edit',
         component: <%= entityClassName %>UpdateComponent,
         resolve: {
-            student: <%= entityClassName %>Resolve
+            <%= entityName %>: <%= entityClassName %>Resolve
         },
         data: {
             authorities: ['ROLE_USER'],
@@ -62,7 +62,7 @@ export const <%= entityRouteName %>_ROUTES: Routes = [
         path: ':id/view',
         component: <%= entityClassName %>DetailComponent,
         resolve: {
-            student: <%= entityClassName %>Resolve
+            <%= entityName %>: <%= entityClassName %>Resolve
         },
         data: {
             authorities: ['ROLE_USER'],
@@ -75,7 +75,7 @@ export const <%= entityName %>PopupRoute: Routes = [
         path: ':id/delete',
         component: <%= entityClassName %>DeletePopupComponent,
         resolve: {
-            student: <%= entityClassName %>Resolve
+            <%= entityName %>: <%= entityClassName %>Resolve
         },
         data: {
             authorities: ['ROLE_USER'],

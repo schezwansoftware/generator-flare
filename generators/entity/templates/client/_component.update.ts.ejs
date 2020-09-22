@@ -54,7 +54,7 @@ export class <%= entityClassName %>UpdateComponent implements OnInit {
     private createFromForm(): <%= entityInterfaceName %> {
         const entity = {
              ...new <%= entityClassName %>(),
-             id: this.editForm.get(['id']).value,
+             id: this.editForm.get(['id']).value || undefined,
              <%for (const field of generatedFields) { %><% if(field.fieldType !== 'Date') {%><%-field.fieldName-%>: this.editForm.get('<%-field.fieldName-%>').value,<%}%><% if(field.fieldType === 'Date') {%><%-field.fieldName-%>: this.editForm.get('<%-field.fieldName-%>').value != null ?
                 moment(this.editForm.get(['<%-field.fieldName-%>']).value, DATE_TIME_FORMAT) : undefined,<%}%>
              <% } %>};

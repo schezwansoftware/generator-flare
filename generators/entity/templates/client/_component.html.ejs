@@ -25,7 +25,7 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let <%= entityName %> of <%= entityArrayVariableName %> ;trackBy: trackId">
-                         <td><a [routerLink]="['/<%= baseName %> ', <%= entityName %>.id, 'view' ]">{{<%= entityName %>.id}}</a></td>
+                         <td><a [routerLink]="['/<%= baseName %>', <%= entityName %>.id, 'view' ]">{{<%= entityName %>.id}}</a></td>
                          <% for (const field of generatedFields) { %><td>{{<% if(field.fieldType === 'Date') {%> <%=entityName%>.<%= field.fieldName %> | date: 'medium' <%}%><% if(field.fieldType !== 'Date') {%> <%=entityName%>.<%= field.fieldName %> <%}%>}}</td>
                          <% } %>
                         <td class="text-right">
