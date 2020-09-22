@@ -378,10 +378,11 @@ module.exports = class extends Generator {
     }
     const entityInterfaceName = `I${_.startCase(_.toLower(config.entityName))}`;
     const entityTitlePlural = `${_.startCase(pluralize(config.entityName))}`;
+    const entityRouteName = `${_.snakeCase(config.entityName).toUpperCase()}`;
     const entityTitleSingular = `${_.startCase(config.entityName)}`;
     const entitySingleVariableName = `${_.toLower(config.entityName)}`;
     const entityArrayVariableName = `${pluralize(this.entityName)}`;
-    config = {...config, entitySingleVariableName, entityArrayVariableName, entityInterfaceName, hasDateField, entityTitleSingular, entityTitlePlural};
+    config = {...config, entityRouteName, entitySingleVariableName, entityArrayVariableName, entityInterfaceName, hasDateField, entityTitleSingular, entityTitlePlural};
     this.fs.copyTpl(
       this.templatePath("client/_model.ts.ejs"),
       this.destinationPath(clientBasePath + "/" + 'shared/model/' + config.baseName + '.model.ts'),
@@ -396,6 +397,7 @@ module.exports = class extends Generator {
     const componentDetailHTML = `${config.baseName}-detail.component.html`;
     const componentDetailTS = `${config.baseName}-detail.component.ts`;
     const moduleTS = `${config.baseName}.module.ts`;
+    const routeTS = `${config.baseName}.route.ts`;
     if (!fileSystem.existsSync(entityPath)) {
       fileSystem.mkdirSync(entityPath);
     }
@@ -437,6 +439,11 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("client/_module.ts.ejs"),
       this.destinationPath(entityPath + '/' + moduleTS),
+      config
+    );
+    this.fs.copyTpl(
+      this.templatePath("client/_route.ts.ejs"),
+      this.destinationPath(entityPath + '/' + routeTS),
       config
     );
   }
