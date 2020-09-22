@@ -1,0 +1,33 @@
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {<%= entityClassName %>Component} from './<%= baseName %>.component';
+import {STUDENT_ROUTES, <%= entityName %>PopupRoute} from './<%= baseName %>.route';
+import {RouterModule} from '@angular/router';
+import {SharedModule} from '../../shared/shared.module';
+import {<%= entityClassName %>UpdateComponent} from './<%= baseName %>-update.component';
+import {<%= entityClassName %>DetailComponent} from './<%= baseName %>-detail.component';
+import {<%= entityClassName %>DeleteDialogComponent, <%= entityClassName %>DeletePopupComponent} from './<%= baseName %>-delete-dialog.component';
+
+const ENTITY_STATES = [...STUDENT_ROUTES, ...<%= entityName %>PopupRoute];
+
+@NgModule({
+    declarations: [<%= entityClassName %>Component,
+      <%= entityClassName %>UpdateComponent,
+      <%= entityClassName %>DetailComponent,
+      <%= entityClassName %>DeleteDialogComponent,
+      <%= entityClassName %>DeletePopupComponent
+    ],
+    entryComponents: [<%= entityClassName %>Component,
+      <%= entityClassName %>UpdateComponent,
+      <%= entityClassName %>DetailComponent,
+      <%= entityClassName %>DeleteDialogComponent,
+      <%= entityClassName %>DeletePopupComponent
+    ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(ENTITY_STATES),
+        SharedModule,
+    ]
+})
+export class <%= entityClassName %>Module {
+}
