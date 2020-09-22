@@ -3,7 +3,7 @@
         <div class="card-body">
             <h2 id="page-heading">
                 <span ><%= entityTitlePlural %></span>
-                <button id="create-entity" class="btn btn-primary float-right create-<%= entitySingleVariableName %>" [routerLink]="['/student/new']">
+                <button id="create-entity" class="btn btn-primary float-right create-<%= entitySingleVariableName %>" [routerLink]="['/<%= baseName %>/new']">
                     <fa-icon [icon]="'plus'"></fa-icon>
                     <span  >
             Create new <%= entityTitleSingular %>

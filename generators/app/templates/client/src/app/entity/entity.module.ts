@@ -8,8 +8,9 @@ import {RouterModule} from '@angular/router';
   declarations: [],
   imports: [
     CommonModule,
-      RouterModule.forChild([
-      ]),
+    RouterModule.forChild([
+// Flare writing content --- flare will use it to inject modules
+    ]),
   ]
 })
 export class EntityModule { }

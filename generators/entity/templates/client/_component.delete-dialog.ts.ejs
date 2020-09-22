@@ -1,0 +1,63 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+
+import { <%= entityClassName %>Service } from './<%= baseName %>.service';
+import {<%= entityInterfaceName %>} from '../../shared/model/<%= baseName %>.model';
+
+@Component({
+  selector: 'app-<%= baseName %>-delete-dialog',
+  templateUrl: './<%= baseName %>-delete-dialog.component.html'
+})
+export class <%= entityClassName %>DeleteDialogComponent {
+  <%= entityName %>: <%= entityInterfaceName %>;
+
+  constructor(protected <%= entityName %>Service: <%= entityClassName %>Service, public activeModal: NgbActiveModal) {}
+
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
+
+  confirmDelete(id: string) {
+    this.<%= entityName %>Service.delete(id).subscribe(response => {
+      this.activeModal.dismiss(true);
+    });
+  }
+}
+
+class <%= entityClassName %>DialogComponentImpl extends <%= entityClassName %>DeleteDialogComponent {
+}
+
+@Component({
+  selector: 'app-<%= baseName %>-delete-popup',
+  template: ''
+})
+export class <%= entityClassName %>DeletePopupComponent implements OnInit, OnDestroy {
+  protected ngbModalRef: NgbModalRef;
+
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
+
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ student }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(<%= entityClassName %>DeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.student = student;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/student', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/student', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
+
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
+}

@@ -396,6 +396,8 @@ module.exports = class extends Generator {
     const componentUpdateHTML = `${config.baseName}-update.component.html`;
     const componentDetailHTML = `${config.baseName}-detail.component.html`;
     const componentDetailTS = `${config.baseName}-detail.component.ts`;
+    const componentDeleteTS = `${config.baseName}-delete-dialog.component.ts`;
+    const componentDeleteHTML = `${config.baseName}-delete-dialog.component.html`;
     const moduleTS = `${config.baseName}.module.ts`;
     const routeTS = `${config.baseName}.route.ts`;
     if (!fileSystem.existsSync(entityPath)) {
@@ -446,5 +448,35 @@ module.exports = class extends Generator {
       this.destinationPath(entityPath + '/' + routeTS),
       config
     );
+    this.fs.copyTpl(
+      this.templatePath("client/_component.delete-dialog.ts.ejs"),
+      this.destinationPath(entityPath + '/' + componentDeleteTS),
+      config
+    );
+    this.fs.copyTpl(
+      this.templatePath("client/_component.delete-dialog.html.ejs"),
+      this.destinationPath(entityPath + '/' + componentDeleteHTML),
+      config
+    );
+    const path = `
+        {
+          path: '${config.baseName}',
+          loadChildren: './${config.baseName}/${config.baseName}.module#${config.entityClassName}Module'
+        },`;
+    const entityBaseModulePath = clientEntityBasePath + "/entity.module.ts";
+    if (fileSystem.existsSync(entityBaseModulePath)) {
+      this.fs.copy(entityBaseModulePath, entityBaseModulePath, {
+        process: function (content) {
+
+          /* Any modification goes here. Note that contents is a Buffer object */
+          if (!content.toString().includes(path)) {
+            let regEx = new RegExp(injectorModuleRegexp, 'g');
+            let replaceString = path + "\n" + injectorModuleRegexp;
+            return content.toString().replace(regEx, replaceString);
+          }
+          return content;
+        }.bind(this)
+      });
+    }
   }
 };
