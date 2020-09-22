@@ -15,6 +15,21 @@
                     </span>
         </a>
       </li>
+      <li *ngSwitchCase="true" ngbDropdown class="nav-item dropdown pointer" placement="bottom-right"
+          routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
+                    <span>
+                         <i class="fa fa-th-list"></i>
+                        <span>
+                            Entities
+                        </span>
+                    </span>
+        </a>
+        <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
+<!--           Flare writing content -&#45;&#45; flare will use it to inject modules-->
+
+        </ul>
+      </li>
       <li ngbDropdown class="nav-item dropdown pointer" placement="bottom-right"
           routerLinkActive="active text-primary" [routerLinkActiveOptions]="{exact: true}">
         <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">

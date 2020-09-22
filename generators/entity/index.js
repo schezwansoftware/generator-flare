@@ -17,6 +17,7 @@ let baseAppPath = '';
 let fields = [];
 const injectorModuleRegexp = '// Flare writing content --- flare will use it to inject modules';
 const injectorModulePathRegexp = '// Flare writing content --- flare will use it to inject module paths';
+const injectorHTMLPathRegexp = '<!--           Flare writing content -&#45;&#45; flare will use it to inject modules-->';
 
 module.exports = class extends Generator {
   // note: arguments and options should be defined in the constructor.
@@ -463,7 +464,17 @@ module.exports = class extends Generator {
           path: '${config.baseName}',
           loadChildren: './${config.baseName}/${config.baseName}.module#${config.entityClassName}Module'
         },`;
+    const liElement = `
+        <li>
+           <a class="dropdown-item" routerLink="${config.baseName}" routerLinkActive="active"
+               (click)="collapseNavbar()">
+              <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+              <span >${config.entityTitleSingular}</span>
+            </a>
+        </li>
+    `;
     const entityBaseModulePath = clientEntityBasePath + "/entity.module.ts";
+    const headerPath = clientBasePath + "/layouts/header/header.component.html";
     if (fileSystem.existsSync(entityBaseModulePath)) {
       this.fs.copy(entityBaseModulePath, entityBaseModulePath, {
         process: function (content) {
@@ -475,6 +486,19 @@ module.exports = class extends Generator {
             return content.toString().replace(regEx, replaceString);
           }
           return content;
+        }.bind(this)
+      });
+    }
+    if (fileSystem.existsSync(headerPath)) {
+      this.fs.copy(headerPath, headerPath, {
+        process: function (content) {
+
+          /* Any modification goes here. Note that contents is a Buffer object */
+          if (!content.toString().includes(liElement)) {
+            let regEx = new RegExp(injectorHTMLPathRegexp, 'g');
+            let replaceString = liElement + "\n" + injectorHTMLPathRegexp;
+            return content.toString().replace(regEx, replaceString);
+          }          return content;
         }.bind(this)
       });
     }
