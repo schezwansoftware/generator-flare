@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <div *ngIf="<%= entityName %>">
+                        <h2><span><%= entityTitleSingular %></span> {{<%= entityName %>.id}}</h2>
+                        <hr>
+                        <dl class="row-md jh-entity-details"><% for (const field of generatedFields) {%>
+                        <dt><span><%= field.fieldTitle %></span></dt>
+                            <dd>
+                                <span>{{<%= entityName %>.<%= field.fieldName %>}}</span>
+                            </dd><%}%>
+                        </dl>
+                        <button type="submit"
+                                (click)="previousState()"
+                                class="btn btn-info">
+                            <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+                        </button>
+
+                        <button type="button"
+                                [routerLink]="['/<%= baseName %>', <%= entityName %>.id, 'edit']"
+                                class="btn btn-primary">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

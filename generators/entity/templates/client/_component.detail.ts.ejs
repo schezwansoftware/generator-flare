@@ -1,0 +1,25 @@
+import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {<%= entityInterfaceName %>} from '../../shared/model/<%= baseName %>.model';
+
+@Component({
+  selector: 'app-<%= baseName %>-detail',
+  templateUrl: './<%= baseName %>-detail.component.html',
+  styleUrls: []
+})
+export class <%= entityClassName %>DetailComponent implements OnInit {
+  <%= entityName %>: <%= entityInterfaceName %>;
+
+  constructor(protected activatedRoute: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ <%= entityName %> }) => {
+      this.<%= entityName %> = <%= entityName %>;
+    });
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+}
