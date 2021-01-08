@@ -1,12 +1,12 @@
 import {<%= entityClassName %>DTO} from './<%= entityBaseFileName %>.DTO';
 import {Injectable} from '@nestjs/common';
-import {<%= entityClassName %>Repositroy} from './<%= entityBaseFileName %>.repository';
+import {<%= entityClassName %>Repository} from './<%= entityBaseFileName %>.repository';
 import {<%= entityClassName %>Mapper} from './<%= entityBaseFileName %>.mapper';
 import {I<%= entityClassName %>} from './<%= entityBaseFileName %>.interface';
 
 @Injectable()
 export class <%= entityClassName %>Service {
-constructor(private <%= entityName %>Repositroy: <%= entityClassName %>Repositroy) {
+constructor(private <%= entityName %>Repository: <%= entityClassName %>Repository) {
 }
 
     async save(<%= entityName %>DTO: <%= entityClassName %>DTO): Promise<<%= entityClassName %>DTO> {
