@@ -1,13 +1,29 @@
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+</p>
+
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
 # generator-flare [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 > Open Source Scaffolding tool for creating NestJs + Angular projects in seconds! 
 
-## Installation
+## Installation using npm
 
 First, install [Yeoman](http://yeoman.io) and generator-flare using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
-npm install -g yo
-npm install -g generator-flare
+npm install -g yo generator-flare
+```
+
+
+
+## Installation using Yarn
+
+install [Yeoman](http://yeoman.io) and generator-flare using [yarn](https://yarnpkg.com/) (Installing [yarn](https://classic.yarnpkg.com/en/docs/install)).
+
+```bash
+yarn global add yo generator-flare
 ```
 
 Then generate your new project:
