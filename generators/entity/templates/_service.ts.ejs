@@ -11,27 +11,27 @@ constructor(private <%= entityName %>Repository: <%= entityClassName %>Repositor
 
     async save(<%= entityName %>DTO: <%= entityClassName %>DTO): Promise<<%= entityClassName %>DTO> {
         const <%= entityName %>: I<%= entityClassName %> = <%= entityClassName %>Mapper.map<%= entityClassName %>DTOTo<%= entityClassName %>(<%= entityName %>DTO);
-        const result = await this.<%= entityName %>Repositroy.save(<%= entityName %>);
+        const result = await this.<%= entityName %>Repository.save(<%= entityName %>);
         return <%= entityClassName %>Mapper.map<%= entityClassName %>To<%= entityClassName %>DTO(result);
     }
 
     async update(<%= entityName %>DTO: <%= entityClassName %>DTO): Promise<<%= entityClassName %>DTO> {
         const <%= entityName %>: I<%= entityClassName %> = <%= entityClassName %>Mapper.map<%= entityClassName %>DTOTo<%= entityClassName %>(<%= entityName %>DTO);
-        const result = await this.<%= entityName %>Repositroy.update(<%= entityName %>);
+        const result = await this.<%= entityName %>Repository.update(<%= entityName %>);
         return <%= entityClassName %>Mapper.map<%= entityClassName %>To<%= entityClassName %>DTO(result);
     }
 
     async findAll(): Promise<<%= entityClassName %>DTO[]> {
-        const <%= entityName %>List: I<%= entityClassName %>[] = await this.<%= entityName %>Repositroy.findAll();
+        const <%= entityName %>List: I<%= entityClassName %>[] = await this.<%= entityName %>Repository.findAll();
         return <%= entityClassName %>Mapper.map<%= entityClassName %>ListTo<%= entityClassName %>DTOList(<%= entityName %>List);
     }
 
     async findById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<<%= entityClassName %>DTO> {
-        const <%= entityName %>: I<%= entityClassName %> = await this.<%= entityName %>Repositroy.findById(id);
+        const <%= entityName %>: I<%= entityClassName %> = await this.<%= entityName %>Repository.findById(id);
         return <%= entityClassName %>Mapper.map<%= entityClassName %>To<%= entityClassName %>DTO(<%= entityName %>);
     }
 
     async deleteById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<void> {
-        return await this.<%= entityName %>Repositroy.deleteById(id);
+        return await this.<%= entityName %>Repository.deleteById(id);
     }
 }

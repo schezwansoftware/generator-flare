@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import {MongooseModule} from '@nestjs/mongoose';
 import {<%= entityClassName %>Schema} from './<%= entityBaseFileName %>.model';
 import {<%= entityClassName %>Service} from './<%= entityBaseFileName %>.service';
-import {<%= entityClassName %>Repositroy} from './<%= entityBaseFileName %>.repository';
+import {<%= entityClassName %>Repository} from './<%= entityBaseFileName %>.repository';
 import {<%= entityClassName %>Controller} from './<%= entityBaseFileName %>.controller';
 
 
@@ -10,8 +10,8 @@ import {<%= entityClassName %>Controller} from './<%= entityBaseFileName %>.cont
   imports: [
     MongooseModule.forFeature([{name: '<%= entityClassName %>', schema: <%= entityClassName %>Schema}]),
   ],
-  providers: [<%= entityClassName %>Service, <%= entityClassName %>Repositroy],
+  providers: [<%= entityClassName %>Service, <%= entityClassName %>Repository],
   controllers: [<%= entityClassName %>Controller],
-  exports: [<%= entityClassName %>Service, <%= entityClassName %>Repositroy],
+  exports: [<%= entityClassName %>Service, <%= entityClassName %>Repository],
 })
 export class <%= entityClassName %>Module {}
