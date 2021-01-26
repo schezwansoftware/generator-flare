@@ -52,11 +52,17 @@ export class User {
     @Column({length: 500})
     password: string;
 
+    @Column({ nullable: true })
+    activationKey?: string;
+
     @Column({length: 500, nullable: true})
     resetKey: string;
 
     @Column({nullable: true})
     resetDate: Date;
+
+    @Column({ default: false })
+    activated?: boolean;
 
     @ManyToMany(type => Authority)
     @JoinTable({

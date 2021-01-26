@@ -49,33 +49,10 @@ constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
         return await this.userModel.findOne({login});
     }
 }
-<%}%><% if (dbType === 'mysql') {%>import {Injectable} from '@nestjs/common';
-import {FindOneOptions, Repository} from 'typeorm';
-import {InjectRepository} from '@nestjs/typeorm';
+<%}%><% if (dbType === 'mysql') {%>import {Repository, EntityRepository} from 'typeorm';
 import {User} from './user.model';
-import {IUser} from './user.interface';
-import * as bcrypt from 'bcrypt';
 
-@Injectable()
+@EntityRepository(User)
 export class UserRepository extends Repository<User> {
-
-    async findByEmail(email: string): Promise<IUser> {
-        return await this.findOne({email});
-    }
-
-    async findByEmailOrLogin(email: string): Promise<User> {
-        const options: FindOneOptions = {
-            relations: ['authorities'],
-        where: [
-        {login: email},
-        {email},
-        ],
-        };
-        return await this.findOne(options);
-    }
-
-            async findByLogin(login: string): Promise<User> {
-                return await this.findOne({login});
-                }
-                }
+}
 <%}%>

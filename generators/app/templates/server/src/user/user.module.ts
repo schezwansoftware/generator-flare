@@ -19,7 +19,7 @@ export class UserModule {}
 import {UserService} from './user.service';
 import {UserController} from './user.controller';
 import {UserMapper} from './user.mapper';
-import {UsersRepository} from './user.repository';
+import {UserRepository} from './user.repository';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {User} from './user.model';
 import {Authority} from './authority/authority.entity';
@@ -28,9 +28,9 @@ import {Authority} from './authority/authority.entity';
     imports: [
         TypeOrmModule.forFeature([User, Authority]),
     ],
-    providers: [UserService, UserMapper, UsersRepository],
+    providers: [UserService, UserMapper, UserRepository],
     controllers: [UserController],
-    exports: [UserService, UserMapper, UsersRepository],
+    exports: [UserService, UserMapper, UserRepository],
 })
 export class UserModule {
 }

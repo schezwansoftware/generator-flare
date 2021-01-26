@@ -1,12 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {IUser} from '../../user/user.interface';
-import {UserService} from '../../user/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {JWTToken} from './token.model';
 import {JWT_EXPIRY_TIME_IN_SECONDS} from '../../app.constants';
-<% if (dbType === 'mongodb') {%>import {UserRepository} from '../../user/user.repository';
-<%}%><% if (dbType === 'mysql') {%>import {UsersRepository as UserRepository} from '../../user/user.repository';
-<%}%>
+import {UserRepository} from '../../user/user.repository';
 @Injectable()
 export class TokenProvider {
 
@@ -23,7 +20,8 @@ export class TokenProvider {
         return new JWTToken(expiresIn, token);
     }
 
-    async validateToken(payload: any): Promise<IUser> {
-        return await this.userRepository.findByEmail(payload.email);
+    async validateToken(payload: any): Promise<IUser> {<% if(dbType === 'mysql') {%>
+      return await this.userRepository.findOne({where: {email: payload.email}});<%}%><% if(dbType === 'mongodb') {%>
+      return await this.userRepository.findByEmail(payload.email);<%}%>
     }
 }

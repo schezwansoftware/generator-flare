@@ -49,6 +49,7 @@ export class UserMapper {
             email: user.email,
             login: user.login,
             authorities: user.authorities.map(x => x.name),
+            activated: user.activated,
         };
     }
 
