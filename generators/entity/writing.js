@@ -160,8 +160,45 @@ const writeMongoDbFiles = (appContext) => {
   }``
 };
 
+const writeSqlDbFiles = (appContext) => {
+
+  const entityBasePath = appContext.destinationPath() + "/server/src/entity";
+  const baseName = _.kebabCase(appContext.entityName);
+  const entitydir = entityBasePath + "/" + baseName;
+
+  const config = createTemplateConfig(appContext);
+
+  if (!fileSystem.existsSync(entitydir)) {
+    fileSystem.mkdirSync(entitydir);
+  }
+
+  writeMongoModelFiles(appContext, config, entitydir, baseName);
+
+  // writeMongoRepoFiles(appContext, config, entitydir, baseName);
+  //
+  // writeMongoServiceFiles(appContext, config, entitydir, baseName);
+  //
+  // writeMongoControllerFiles(appContext, config, entitydir, baseName);
+  //
+  // writeMongoDTOFiles(appContext, config, entitydir, baseName);
+  //
+  // writeMongoModuleFiles(appContext, config, entitydir, baseName);
+  //
+  // const entityBaseModulePath = entityBasePath + "/entity.module.ts";
+  //
+  // injectEntityInModule(appContext, entityBaseModulePath, baseName);
+  //
+  copyEntityConfig(appContext);
+  //
+  // const appType = appContext.config.get("appType");
+  // if (appType === 'fullstack') {
+  //   appContext._writeClientFiles(config);
+  // }``
+};
+
 const _writeServerFiles = (appContext) => {
   if (appContext.dbType === 'mysql') {
+    writeSqlDbFiles(appContext);
 
   } else if (appContext.dbType === 'mongodb') {
     writeMongoDbFiles(appContext);

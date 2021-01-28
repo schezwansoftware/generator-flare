@@ -5,11 +5,33 @@ export const <%= entityClassName %>Schema = new mongoose.Schema({
     <%= field.fieldName %>: {type: mongoose.SchemaTypes.<%= field.fieldType%>, required: <%= field.requiredField ? 'true': 'false'%>},
 <% } %>
 });
-<%}%><% if (dbType === 'mysql') {%>import * as mongoose from 'mongoose';
+<%}%><% if (dbType === 'mysql') {%>import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm';
 
+@Entity()
 export class <%= entityClassName %> {
-<% for (const field of generatedFields) { -%><%= field.fieldName %>: <%= field.fieldType %>
+   @PrimaryGeneratedColumn()
+   id: number;
+<% for (const field of generatedFields) { -%>
+
+   @Column()
+   <%= field.fieldName %>: <%= getType(field.fieldType) %>;
 <% } %>}
 <%}%>
-
-
+<%
+function getType(type) {
+  switch (type) {
+    case "String":
+      return "string";
+    case "Date":
+      return "Date";
+    case "Boolean":
+      return "boolean";
+    case "ObjectId":
+      return "string";
+    case "Number":
+      return "number";
+    default:
+      return "string";
+  }
+}
+%>
