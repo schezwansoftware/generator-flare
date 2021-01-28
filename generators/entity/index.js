@@ -1,23 +1,12 @@
 'use strict';
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-const yosay = require('yosay');
-const mkdirp = require('mkdirp');
-const _ = require('lodash');
 const pluralize = require('pluralize');
-const path = require('path');
 const packagejs = require(__dirname + '/../../package.json');
-const questions = 5;
-const serverBasePath = 'server';
-const clientBasePath = 'client';
-const dockerBasePath = 'docker';
 const fileSystem = require('fs');
+const writing = require('./writing');
+const _ = require('lodash');
 const entityConfigBase = '.flare';
-let baseAppPath = '';
-let fields = [];
-const injectorModuleRegexp = '// Flare writing content --- flare will use it to inject modules';
-const injectorModulePathRegexp = '// Flare writing content --- flare will use it to inject module paths';
-const injectorHTMLPathRegexp = '<!--           Flare writing content -&#45;&#45; flare will use it to inject modules-->';
 
 module.exports = class extends Generator {
   // note: arguments and options should be defined in the constructor.
@@ -86,102 +75,7 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    const entityBasePath = this.destinationPath() + "/server/src/entity";
-    const entityClassName = _.upperFirst(this.entityName);
-    const baseName = _.kebabCase(this.entityName);
-    const entityAPIUrl = _.kebabCase(pluralize(this.entityName));
-    const entityController = `${baseName}.controller.ts`;
-    const entityService = `${baseName}.service.ts`;
-    const entityInterface = `${baseName}.interface.ts`;
-    const entityMapper = `${baseName}.mapper.ts`;
-    const entityDTO = `${baseName}.DTO.ts`;
-    const entityModule = `${baseName}.module.ts`;
-    const entityModuleName = `${entityClassName}Module`;
-    const entityModel = `${baseName}.model.ts`;
-    const entityRepository = `${baseName}.repository.ts`;
-    const entitydir = entityBasePath + "/" + baseName;
-    const config = {
-      baseName,
-      entityName: this.entityName,
-      entityClassName: entityClassName,
-      entityBaseFileName: baseName,
-      generatedFields: this.generatedFields,
-      pluralizedEntityName: pluralize(entityClassName),
-      dbType: this.dbType,
-      entityAPIUrl: entityAPIUrl
-    };
-    if (!fileSystem.existsSync(entitydir)) {
-      fileSystem.mkdirSync(entitydir);
-    }
-    this.fs.copyTpl(
-      this.templatePath("_model.ts.ejs"),
-      this.destinationPath(entitydir + "/" + entityModel),
-      config
-    );
-    this.fs.copyTpl(
-      this.templatePath("_interface.ts.ejs"),
-      this.destinationPath(entitydir + "/" + entityInterface),
-      config
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("_repository.ts.ejs"),
-      this.destinationPath(entitydir + "/" + entityRepository),
-      config
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("_mapper.ts.ejs"),
-      this.destinationPath(entitydir + "/" + entityMapper),
-      config
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("_DTO.ts.ejs"),
-      this.destinationPath(entitydir + "/" + entityDTO),
-      config
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("_service.ts.ejs"),
-      this.destinationPath(entitydir + "/" + entityService),
-      config
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("_controller.ts.ejs"),
-      this.destinationPath(entitydir + "/" + entityController),
-      config
-    );
-    this.fs.copyTpl(
-      this.templatePath("_module.ts.ejs"),
-      this.destinationPath(entitydir + "/" + entityModule),
-      config
-    );
-    const entityBaseModulePath = entityBasePath + "/entity.module.ts";
-    if (fileSystem.existsSync(entityBaseModulePath)) {
-      this.fs.copy(entityBaseModulePath, entityBaseModulePath, {
-        process: function (content) {
-
-          /* Any modification goes here. Note that contents is a Buffer object */
-          if (!content.toString().includes(entityModuleName)) {
-            let regEx = new RegExp(injectorModuleRegexp, 'g');
-            let replaceString = entityModuleName + "," + "\n" + injectorModuleRegexp;
-            let newContent = content.toString().replace(regEx, replaceString);
-            regEx = new RegExp(injectorModulePathRegexp, 'g');
-            replaceString = `import {${entityModuleName}} from './${baseName}/${baseName}.module';\n${injectorModulePathRegexp}`;
-            newContent = newContent.replace(injectorModulePathRegexp, replaceString);
-            return newContent;
-          }
-          return content;
-        }.bind(this)
-      });
-    }
-    this._cpEntityConfig();
-    const appType = this.config.get("appType");
-    if (appType === 'fullstack') {
-      this._writeClientFiles(config);
-    }
+    writing._writeServerFiles(this);
   }
 
   install() {
