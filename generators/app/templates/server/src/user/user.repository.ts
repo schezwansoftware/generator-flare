@@ -1,58 +1,70 @@
 <% if (dbType === 'mongodb') {%>import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {IUser, User} from './user.interface';
-import {Model} from 'mongoose';
+import {Model} from 'mongoose';<%}%><% if (dbType === 'mysql') {%>
+import {EntityRepository, FindOneOptions, getRepository} from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import {User} from './user.model';<%}%>
 
-@Injectable()
-export class UserRepository {
+<%if (dbType === 'mongodb') {%>@Injectable()<%}%><%if (dbType === 'mysql') {%>@EntityRepository(User)<%}%>
+export class UserRepository {<%if (dbType === 'mongodb') {%>
 
-constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
+    constructor(@InjectModel('User') private readonly userModel: Model<User>) { }<%}%>
 
-    async save(user: IUser): Promise<User> {
-        const newUser = new this.userModel(user);
-        return newUser.save();
+    async save(user: <%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>): Promise<User> {<%if (dbType === 'mongodb') {%>
+      const newUser = new this.userModel(user);
+      return newUser.save();<%}%><%if (dbType === 'mysql') {%>
+      if (user.id) {
+        return this.update(user);
+      }
+      user.password = await this.encodePassword(user.password);
+      return getRepository(User).save(user);<%}%>
     }
 
-    async update(user: IUser): Promise<IUser> {
-        return await this.userModel.findByIdAndUpdate(user.id, user , {new: true});
+    async update(user: <%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {<%if (dbType === 'mongodb') {%>
+      return await this.userModel.findByIdAndUpdate(user.id, user , {new: true});<%}%><%if (dbType === 'mysql') {%>
+      await getRepository(User).update(user.id, user);
+      return await getRepository(User).findOne(user.id);<%}%>
     }
 
-    async findAll(): Promise<IUser[]> {
-        return await this.userModel.find();
+    async findAll(): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>[]> {
+    <%if (dbType === 'mongodb') {%>return await this.userModel.find();<%}%><%if (dbType === 'mysql') {%>return await getRepository(User).find();<%}%>
     }
 
-    async findById(id: string): Promise<IUser> {
-        return await this.userModel.findById(id);
+    async findById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {
+      <%if (dbType === 'mongodb') {%>return await this.userModel.find();<%}%><%if (dbType === 'mysql') {%>return await getRepository(User).findOne(id);<%}%>
     }
 
-    async deleteById(id: string): Promise<void> {
-        await this.userModel.findByIdAndDelete(id);
+    async deleteById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<void> {
+      <%if (dbType === 'mongodb') {%> await this.userModel.deleteById(id);<%}%><%if (dbType === 'mysql') {%> await getRepository(User).delete(id);<%}%>
     }
 
-    async findByEmail(email: string): Promise<IUser> {
-        return await this.userModel.findOne({email});
+    async findByEmail(email: string): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {
+      <%if (dbType === 'mongodb') {%>return await this.userModel.findOne({email});<%}%><%if (dbType === 'mysql') {%>return await this.findOneByOptions({where: {email}});<%}%>
     }
 
-    async findByActivationKey(activationKey: string): Promise<IUser> {
-      return await this.userModel.findOne({activationKey});
+    async findByActivationKey(activationKey: string): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {
+      <%if (dbType === 'mongodb') {%>return await this.userModel.findOne({activationKey});<%}%><%if (dbType === 'mysql') {%>return await this.findOneByOptions({where: {activationKey}});<%}%>
     }
 
-    async findByResetKey(resetKey: string): Promise<IUser> {
-      return await this.userModel.findOne({resetKey});
+    async findByResetKey(resetKey: string): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {
+      <%if (dbType === 'mongodb') {%>return await this.userModel.findOne({resetKey});<%}%><%if (dbType === 'mysql') {%>return await this.findOneByOptions({where: {resetKey}});<%}%>
     }
 
-    async findByEmailOrLogin(email: string): Promise<IUser> {
-        return await this.userModel.findOne({$or: [{email}, {login: email}]});
+    async findByEmailOrLogin(email: string): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {
+      <%if (dbType === 'mongodb') {%>return await this.userModel.findOne({$or: [{email}, {login: email}]});<%}%><%if (dbType === 'mysql') {%>return await this.findOneByOptions({where: [{email}, {login: email}]});<%}%>
     }
 
-    async findByLogin(login: string): Promise<IUser> {
-        return await this.userModel.findOne({login});
+    async findByLogin(login: string): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {
+      <%if (dbType === 'mongodb') {%>return await this.userModel.findOne({login});<%}%><%if (dbType === 'mysql') {%>return await this.findOneByOptions({where: {login}});<%}%>
+    }<% if (dbType === 'mysql') {%>
+
+    private async encodePassword(password): Promise<string> {
+      return await bcrypt.hash(password, 12);
     }
+
+    private async findOneByOptions(options: FindOneOptions): Promise<User> {
+      options.relations = ['authorities'];
+      return await getRepository(User).findOne(options);
+    }<%}%>
 }
-<%}%><% if (dbType === 'mysql') {%>import {Repository, EntityRepository} from 'typeorm';
-import {User} from './user.model';
-
-@EntityRepository(User)
-export class UserRepository extends Repository<User> {
-}
-<%}%>

@@ -20,8 +20,7 @@ export class TokenProvider {
         return new JWTToken(expiresIn, token);
     }
 
-    async validateToken(payload: any): Promise<IUser> {<% if(dbType === 'mysql') {%>
-      return await this.userRepository.findOne({where: {email: payload.email}});<%}%><% if(dbType === 'mongodb') {%>
-      return await this.userRepository.findByEmail(payload.email);<%}%>
+    async validateToken(payload: any): Promise<IUser> {
+      return await this.userRepository.findByEmail(payload.email);
     }
 }
