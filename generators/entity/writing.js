@@ -6,6 +6,23 @@ const _ = require('lodash');
 const fileSystem = require('fs');
 
 
+
+const createTemplateConfig = (appContext) => {
+  const entityClassName = _.upperFirst(appContext.entityName);
+  const baseName = _.kebabCase(appContext.entityName);
+  const entityAPIUrl = _.kebabCase(pluralize(appContext.entityName));
+  return {
+    baseName,
+    entityName: appContext.entityName,
+    entityClassName: entityClassName,
+    entityBaseFileName: baseName,
+    generatedFields: appContext.generatedFields,
+    pluralizedEntityName: pluralize(entityClassName),
+    dbType: appContext.dbType,
+    entityAPIUrl: entityAPIUrl
+  };
+};
+
 const writeMongoModelFiles = (appContext, config, entitydir, baseName) => {
   const entityInterface = `${baseName}.interface.ts`;
   const entityModel = `${baseName}.model.ts`;
@@ -101,25 +118,24 @@ const injectEntityInModule = (appContext, entityBaseModulePath, baseName) => {
   }
 };
 
+const copyEntityConfig = (appContext) => {
+  const fieldData = appContext.generatedFields;
+  const data = {fieldData};
+  fileSystem.writeFileSync(appContext.entityConfigBasePath, JSON.stringify(data));
+};
+
 const writeMongoDbFiles = (appContext) => {
+
   const entityBasePath = appContext.destinationPath() + "/server/src/entity";
-  const entityClassName = _.upperFirst(appContext.entityName);
   const baseName = _.kebabCase(appContext.entityName);
-  const entityAPIUrl = _.kebabCase(pluralize(appContext.entityName));
   const entitydir = entityBasePath + "/" + baseName;
-  const config = {
-    baseName,
-    entityName: appContext.entityName,
-    entityClassName: entityClassName,
-    entityBaseFileName: baseName,
-    generatedFields: appContext.generatedFields,
-    pluralizedEntityName: pluralize(entityClassName),
-    dbType: appContext.dbType,
-    entityAPIUrl: entityAPIUrl
-  };
+
+  const config = createTemplateConfig(appContext);
+
   if (!fileSystem.existsSync(entitydir)) {
     fileSystem.mkdirSync(entitydir);
   }
+
   writeMongoModelFiles(appContext, config, entitydir, baseName);
 
   writeMongoRepoFiles(appContext, config, entitydir, baseName);
@@ -133,8 +149,11 @@ const writeMongoDbFiles = (appContext) => {
   writeMongoModuleFiles(appContext, config, entitydir, baseName);
 
   const entityBaseModulePath = entityBasePath + "/entity.module.ts";
+
   injectEntityInModule(appContext, entityBaseModulePath, baseName);
-  appContext._cpEntityConfig();
+
+  copyEntityConfig(appContext);
+
   const appType = appContext.config.get("appType");
   if (appType === 'fullstack') {
     appContext._writeClientFiles(config);
@@ -148,4 +167,5 @@ const _writeServerFiles = (appContext) => {
     writeMongoDbFiles(appContext);
   }
 };
+
 module.exports = {_writeServerFiles};
