@@ -32,11 +32,11 @@ export class UserRepository {<%if (dbType === 'mongodb') {%>
     }
 
     async findById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {
-      <%if (dbType === 'mongodb') {%>return await this.userModel.find();<%}%><%if (dbType === 'mysql') {%>return await getRepository(User).findOne(id);<%}%>
+      <%if (dbType === 'mongodb') {%>return await this.userModel.findById(id);<%}%><%if (dbType === 'mysql') {%>return await getRepository(User).findOne(id);<%}%>
     }
 
     async deleteById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<void> {
-      <%if (dbType === 'mongodb') {%> await this.userModel.deleteById(id);<%}%><%if (dbType === 'mysql') {%> await getRepository(User).delete(id);<%}%>
+      <%if (dbType === 'mongodb') {%> await this.userModel.findByIdAndDelete(id);<%}%><%if (dbType === 'mysql') {%> await getRepository(User).delete(id);<%}%>
     }
 
     async findByEmail(email: string): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {
