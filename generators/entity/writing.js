@@ -190,10 +190,10 @@ const writeSqlDbFiles = (appContext) => {
   //
   copyEntityConfig(appContext);
   //
-  // const appType = appContext.config.get("appType");
-  // if (appType === 'fullstack') {
-  //   appContext._writeClientFiles(config);
-  // }``
+  const appType = appContext.config.get("appType");
+  if (appType === 'fullstack') {
+    appContext._writeClientFiles(config);
+  }``
 };
 
 const _writeServerFiles = (appContext) => {
