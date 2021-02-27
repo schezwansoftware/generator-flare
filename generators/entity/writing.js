@@ -1,6 +1,5 @@
 const injectorModuleRegexp = '// Flare writing content --- flare will use it to inject modules';
 const injectorModulePathRegexp = '// Flare writing content --- flare will use it to inject module paths';
-const injectorHTMLPathRegexp = '<!--           Flare writing content -&#45;&#45; flare will use it to inject modules-->';
 const pluralize = require('pluralize');
 const _ = require('lodash');
 const fileSystem = require('fs');
@@ -118,6 +117,27 @@ const injectEntityInModule = (appContext, entityBaseModulePath, baseName) => {
   }
 };
 
+const injectEntityInEntityConstants = (appContext, entityBaseModulePath, baseName) => {
+  const entityClassName = _.upperFirst(appContext.entityName);
+  if (fileSystem.existsSync(entityBaseModulePath)) {
+    appContext.fs.copy(entityBaseModulePath, entityBaseModulePath, {
+      process: function (content) {
+
+        /* Any modification goes here. Note that contents is a Buffer object */
+        if (!content.toString().includes(entityClassName)) {
+          let regEx = new RegExp(injectorModuleRegexp, 'g');
+          let replaceString = '    ' + entityClassName + "," + "\n" + injectorModuleRegexp;
+          let newContent = content.toString().replace(regEx, replaceString);
+          replaceString = `import {${entityClassName}} from './${baseName}/${baseName}.model';\n${injectorModulePathRegexp}`;
+          newContent = newContent.replace(injectorModulePathRegexp, replaceString);
+          return newContent;
+        }
+        return content;
+      }.bind(appContext)
+    });
+  }
+};
+
 const copyEntityConfig = (appContext) => {
   const fieldData = appContext.generatedFields;
   const data = {fieldData};
@@ -189,6 +209,10 @@ const writeSqlDbFiles = (appContext) => {
   injectEntityInModule(appContext, entityBaseModulePath, baseName);
   //
   copyEntityConfig(appContext);
+
+  const entityConstantsPath = entityBasePath + "/entity.constants.ts";
+  //
+  injectEntityInEntityConstants(appContext, entityConstantsPath, baseName);
   //
   const appType = appContext.config.get("appType");
   if (appType === 'fullstack') {

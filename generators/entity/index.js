@@ -7,7 +7,8 @@ const fileSystem = require('fs');
 const writing = require('./writing');
 const _ = require('lodash');
 const entityConfigBase = '.flare';
-
+const injectorModuleRegexp = '// Flare writing content --- flare will use it to inject modules';
+const injectorHTMLPathRegexp = '<!--           Flare writing content -&#45;&#45; flare will use it to inject modules-->';
 module.exports = class extends Generator {
   // note: arguments and options should be defined in the constructor.
   constructor(args, opts) {
