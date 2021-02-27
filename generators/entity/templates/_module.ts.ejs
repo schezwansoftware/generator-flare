@@ -1,17 +1,17 @@
-import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';<%if (dbType === 'mongodb') {%>
 import {MongooseModule} from '@nestjs/mongoose';
-import {<%= entityClassName %>Schema} from './<%= entityBaseFileName %>.model';
+import {<%= entityClassName %>Schema} from './<%= entityBaseFileName %>.model';<%}%>
 import {<%= entityClassName %>Service} from './<%= entityBaseFileName %>.service';
 import {<%= entityClassName %>Repository} from './<%= entityBaseFileName %>.repository';
 import {<%= entityClassName %>Controller} from './<%= entityBaseFileName %>.controller';
 
-
-@Module({
-  imports: [
-    MongooseModule.forFeature([{name: '<%= entityClassName %>', schema: <%= entityClassName %>Schema}]),
-  ],
-  providers: [<%= entityClassName %>Service, <%= entityClassName %>Repository],
-  controllers: [<%= entityClassName %>Controller],
-  exports: [<%= entityClassName %>Service, <%= entityClassName %>Repository],
+@Module({<%if (dbType === 'mongodb') {%>
+    imports: [
+          MongooseModule.forFeature([{name: '<%= entityClassName %>', schema: <%= entityClassName %>Schema}]),
+    ],<%}%><%if (dbType === 'mysql') {%>
+    imports: [],<%}%>
+    providers: [<%= entityClassName %>Service, <%= entityClassName %>Repository],
+    controllers: [<%= entityClassName %>Controller],
+    exports: [<%= entityClassName %>Service, <%= entityClassName %>Repository],
 })
 export class <%= entityClassName %>Module {}

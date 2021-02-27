@@ -105,7 +105,7 @@ const injectEntityInModule = (appContext, entityBaseModulePath, baseName) => {
         /* Any modification goes here. Note that contents is a Buffer object */
         if (!content.toString().includes(entityModuleName)) {
           let regEx = new RegExp(injectorModuleRegexp, 'g');
-          let replaceString = entityModuleName + "," + "\n" + injectorModuleRegexp;
+          let replaceString = '        ' + entityModuleName + "," + "\n" + injectorModuleRegexp;
           let newContent = content.toString().replace(regEx, replaceString);
           regEx = new RegExp(injectorModulePathRegexp, 'g');
           replaceString = `import {${entityModuleName}} from './${baseName}/${baseName}.module';\n${injectorModulePathRegexp}`;
@@ -182,11 +182,11 @@ const writeSqlDbFiles = (appContext) => {
   //
   writeMongoDTOFiles(appContext, config, entitydir, baseName);
   //
-  // writeMongoModuleFiles(appContext, config, entitydir, baseName);
+  writeMongoModuleFiles(appContext, config, entitydir, baseName);
   //
-  // const entityBaseModulePath = entityBasePath + "/entity.module.ts";
+  const entityBaseModulePath = entityBasePath + "/entity.module.ts";
   //
-  // injectEntityInModule(appContext, entityBaseModulePath, baseName);
+  injectEntityInModule(appContext, entityBaseModulePath, baseName);
   //
   copyEntityConfig(appContext);
   //
