@@ -174,13 +174,13 @@ const writeSqlDbFiles = (appContext) => {
 
   writeMongoModelFiles(appContext, config, entitydir, baseName);
 
-  // writeMongoRepoFiles(appContext, config, entitydir, baseName);
+  writeMongoRepoFiles(appContext, config, entitydir, baseName);
   //
-  // writeMongoServiceFiles(appContext, config, entitydir, baseName);
+  writeMongoServiceFiles(appContext, config, entitydir, baseName);
   //
-  // writeMongoControllerFiles(appContext, config, entitydir, baseName);
+  writeMongoControllerFiles(appContext, config, entitydir, baseName);
   //
-  // writeMongoDTOFiles(appContext, config, entitydir, baseName);
+  writeMongoDTOFiles(appContext, config, entitydir, baseName);
   //
   // writeMongoModuleFiles(appContext, config, entitydir, baseName);
   //

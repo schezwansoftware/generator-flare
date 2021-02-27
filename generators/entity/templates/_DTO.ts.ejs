@@ -1,5 +1,5 @@
 export class <%= entityClassName %>DTO {
-    id?: string;
+    id?: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>;
 <% for (const field of generatedFields) { %>
     <%= field.fieldName %>?: <%= getType(field.fieldType) %>;
 <% } %>

@@ -1,8 +1,9 @@
 import {<%= entityClassName %>DTO} from './<%= entityBaseFileName %>.DTO';
 import {Injectable} from '@nestjs/common';
 import {<%= entityClassName %>Repository} from './<%= entityBaseFileName %>.repository';
-import {<%= entityClassName %>Mapper} from './<%= entityBaseFileName %>.mapper';
-import {I<%= entityClassName %>} from './<%= entityBaseFileName %>.interface';
+import {<%= entityClassName %>Mapper} from './<%= entityBaseFileName %>.mapper';<% if (dbType === 'mongodb') {%>import {I<%= entityClassName %>} from './<%= entityBaseFileName %>.interface';<%}%>
+<% if (dbType === 'mysql') {%>import {<%= entityClassName %>} from './<%= entityBaseFileName %>.model';<%}%>
+
 
 @Injectable()
 export class <%= entityClassName %>Service {
@@ -10,24 +11,24 @@ constructor(private <%= entityName %>Repository: <%= entityClassName %>Repositor
 }
 
     async save(<%= entityName %>DTO: <%= entityClassName %>DTO): Promise<<%= entityClassName %>DTO> {
-        const <%= entityName %>: I<%= entityClassName %> = <%= entityClassName %>Mapper.map<%= entityClassName %>DTOTo<%= entityClassName %>(<%= entityName %>DTO);
+        const <%= entityName %>: <%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%> = <%= entityClassName %>Mapper.map<%= entityClassName %>DTOTo<%= entityClassName %>(<%= entityName %>DTO);
         const result = await this.<%= entityName %>Repository.save(<%= entityName %>);
         return <%= entityClassName %>Mapper.map<%= entityClassName %>To<%= entityClassName %>DTO(result);
     }
 
     async update(<%= entityName %>DTO: <%= entityClassName %>DTO): Promise<<%= entityClassName %>DTO> {
-        const <%= entityName %>: I<%= entityClassName %> = <%= entityClassName %>Mapper.map<%= entityClassName %>DTOTo<%= entityClassName %>(<%= entityName %>DTO);
+        const <%= entityName %>: <%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%> = <%= entityClassName %>Mapper.map<%= entityClassName %>DTOTo<%= entityClassName %>(<%= entityName %>DTO);
         const result = await this.<%= entityName %>Repository.update(<%= entityName %>);
         return <%= entityClassName %>Mapper.map<%= entityClassName %>To<%= entityClassName %>DTO(result);
     }
 
     async findAll(): Promise<<%= entityClassName %>DTO[]> {
-        const <%= entityName %>List: I<%= entityClassName %>[] = await this.<%= entityName %>Repository.findAll();
+        const <%= entityName %>List: <%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%>[] = await this.<%= entityName %>Repository.findAll();
         return <%= entityClassName %>Mapper.map<%= entityClassName %>ListTo<%= entityClassName %>DTOList(<%= entityName %>List);
     }
 
     async findById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<<%= entityClassName %>DTO> {
-        const <%= entityName %>: I<%= entityClassName %> = await this.<%= entityName %>Repository.findById(id);
+        const <%= entityName %>: <%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%> = await this.<%= entityName %>Repository.findById(id);
         return <%= entityClassName %>Mapper.map<%= entityClassName %>To<%= entityClassName %>DTO(<%= entityName %>);
     }
 

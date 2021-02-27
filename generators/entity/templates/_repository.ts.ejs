@@ -1,32 +1,40 @@
-import {Injectable} from '@nestjs/common';
+<%if (dbType === 'mongodb') {%>import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
-import {<%= entityClassName %>, I<%= entityClassName %>} from './<%= entityBaseFileName %>.interface';
+import {<%= entityClassName %>, I<%= entityClassName %>} from './<%= entityBaseFileName %>.interface';<%}%><% if (dbType === 'mysql') {%>import {EntityRepository, getRepository} from 'typeorm';
+import {<%= entityClassName %>} from './<%= entityBaseFileName %>.model';<%}%>
 
-@Injectable()
-export class <%= entityClassName %>Repository {
+<%if (dbType === 'mongodb') {%>@Injectable()<%}%><%if (dbType === 'mysql') {%>@EntityRepository(<%=entityClassName%>)<%}%>
+export class <%= entityClassName %>Repository {<% if (dbType === 'mongodb') {%>
+
     constructor(
-        @InjectModel('<%= entityClassName %>') private readonly <%= entityName %>Model: Model<<%= entityClassName %>>,
-           ) { }
+    @InjectModel('<%= entityClassName %>') private readonly <%= entityName %>Model: Model<<%= entityClassName %>>,
+    ) { }<%}%>
 
-    async save(<%= entityName %>: I<%= entityClassName %>): Promise<I<%= entityClassName %>> {
-        const new<%= entityClassName %> = new this.<%= entityName %>Model(<%= entityName %>);
-        return new<%= entityClassName %>.save();
+    async save(<%= entityName %>: <%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%>): Promise<<%= entityClassName %>> {<%if (dbType === 'mongodb') {%>
+      const new<%= entityClassName %> = new this.<%= entityName %>Model(<%= entityName %>);
+      return new<%= entityClassName %>.save();<%}%><%if (dbType === 'mysql') {%>
+      if (<%= entityName %>.id) {
+      return this.update(<%= entityName %>);
+      }
+      return getRepository(<%= entityClassName %>).save(<%= entityName %>);<%}%>
     }
 
-    async update(<%= entityName %>: I<%= entityClassName %>): Promise<I<%= entityClassName %>> {
-        return await this.<%= entityName %>Model.findByIdAndUpdate(<%= entityName %>.id, <%= entityName %> , {new: true});
+    async update(<%= entityName %>: <%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%>): Promise<<%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%>> {<%if (dbType === 'mongodb') {%>
+        return await this.<%= entityName %>Model.findByIdAndUpdate(<%= entityName %>.id, <%= entityName %> , {new: true});<%}%><%if (dbType === 'mysql') {%>
+        await getRepository(<%= entityClassName %>).update(<%= entityName %>.id, <%= entityName %>);
+        return await getRepository(<%= entityClassName %>).findOne(<%= entityName %>.id);<%}%>
     }
 
-    async findAll(): Promise<I<%= entityClassName %>[]> {
-        return await this.<%= entityName %>Model.find();
+    async findAll(): Promise<<%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%>[]> {
+      <%if (dbType === 'mongodb') {%>return await this.<%= entityName %>Model.find();<%}%><%if (dbType === 'mysql') {%>return await getRepository(<%= entityClassName %>).find();<%}%>
     }
 
-    async findById(id: string): Promise<I<%= entityClassName %>> {
-        return await this.<%= entityName %>Model.findById(id);
+    async findById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<<%if (dbType === 'mongodb') {%>I<%= entityClassName %><%}%><%if (dbType === 'mysql') {%><%= entityClassName %><%}%>> {
+      <%if (dbType === 'mongodb') {%>return await this.<%= entityName %>Model.findById(id);<%}%><%if (dbType === 'mysql') {%>return await getRepository(<%= entityClassName %>).findOne(id);<%}%>
     }
 
-    async deleteById(id: string): Promise<void> {
-        await this.<%= entityName %>Model.findByIdAndDelete(id);
+    async deleteById(id: <%if (dbType === 'mongodb') {%>string<%}%><%if (dbType === 'mysql') {%>number<%}%>): Promise<void> {
+      <%if (dbType === 'mongodb') {%> await this.<%= entityName %>Model.findByIdAndDelete(id);<%}%><%if (dbType === 'mysql') {%> await getRepository(<%= entityClassName %>).delete(id);<%}%>
     }
 }
