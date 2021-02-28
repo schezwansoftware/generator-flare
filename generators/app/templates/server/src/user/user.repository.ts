@@ -23,8 +23,34 @@ export class UserRepository {<%if (dbType === 'mongodb') {%>
 
     async update(user: <%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>> {<%if (dbType === 'mongodb') {%>
       return await this.userModel.findByIdAndUpdate(user.id, user , {new: true});<%}%><%if (dbType === 'mysql') {%>
-      await getRepository(User).update(user.id, user);
-      return await getRepository(User).findOne(user.id);<%}%>
+      /**
+       * Get the actual relationships of the user.
+       */
+      const actualRelationships = await getRepository(User)
+        .createQueryBuilder()
+        .relation(User, 'authorities')
+        .of(user).loadMany();
+
+      /**
+       * Add new relationships of the user, and delete the old relationships.
+       */
+      await getRepository(User)
+        .createQueryBuilder()
+        .relation(User, 'authorities')
+        .of(user)
+        .addAndRemove(user.authorities, actualRelationships);
+
+      /**
+       * Update only the table USER.
+       */
+      delete user.authorities;
+      await getRepository(User)
+        .createQueryBuilder()
+        .relation(User, 'authorities')
+        .update({
+          ...user
+        }).where('id = :id', {id: user.id}).execute();
+        return await getRepository(User).findOne(user.id);<%}%>
     }
 
     async findAll(): Promise<<%if (dbType === 'mongodb') {%>IUser<%}%><%if (dbType === 'mysql') {%>User<%}%>[]> {

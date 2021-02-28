@@ -6,12 +6,12 @@ import { AppComponent } from './app.component';
 import { HomeModule } from './home/home.module';
 import { HeaderComponent } from './layouts/header/header.component';
 import { SharedModule } from './shared/shared.module';
-import {library} from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faArrowLeft, faAsterisk,
   faBan, faBars, faBell, faBook, faCalendarAlt, faCloud,
   faEye, faFlag, faHdd, faHeart, faHome, faList, faLock, faPencilAlt,
-  faPlus, faRoad,
+  faPlus, faRoad, fas,
   faSave, faSearch, faSignInAlt, faSignOutAlt,
   faSort,
   faSortDown,
@@ -34,6 +34,7 @@ import {EntityModule} from './entity/entity.module';
   ],
   imports: [
     BrowserModule,
+    FontAwesomeModule,
     AppRoutingModule,
     HomeModule,
     SharedModule.forRoot(),
@@ -50,40 +51,41 @@ import {EntityModule} from './entity/entity.module';
 export class AppModule {
 
 
-  constructor() {
-    library.add(faUser);
-    library.add(faSort);
-    library.add(faSortUp);
-    library.add(faSortDown);
-    library.add(faSync);
-    library.add(faEye);
-    library.add(faBan);
-    library.add(faTimes);
-    library.add(faArrowLeft);
-    library.add(faSave);
-    library.add(faPlus);
-    library.add(faPencilAlt);
-    library.add(faBars);
-    library.add(faHome);
-    library.add(faThList);
-    library.add(faUserPlus);
-    library.add(faRoad);
-    library.add(faTachometerAlt);
-    library.add(faHeart);
-    library.add(faList);
-    library.add(faBell);
-    library.add(faTasks);
-    library.add(faBook);
-    library.add(faHdd);
-    library.add(faFlag);
-    library.add(faWrench);
-    library.add(faLock);
-    library.add(faCloud);
-    library.add(faSignOutAlt);
-    library.add(faSignInAlt);
-    library.add(faCalendarAlt);
-    library.add(faSearch);
-    library.add(faTrashAlt);
-    library.add(faAsterisk);
+  constructor(library: FaIconLibrary) {
+    library.addIconPacks(fas);
+    library.addIcons(faUser);
+    library.addIcons(faSort);
+    library.addIcons(faSortUp);
+    library.addIcons(faSortDown);
+    library.addIcons(faSync);
+    library.addIcons(faEye);
+    library.addIcons(faBan);
+    library.addIcons(faTimes);
+    library.addIcons(faArrowLeft);
+    library.addIcons(faSave);
+    library.addIcons(faPlus);
+    library.addIcons(faPencilAlt);
+    library.addIcons(faBars);
+    library.addIcons(faHome);
+    library.addIcons(faThList);
+    library.addIcons(faUserPlus);
+    library.addIcons(faRoad);
+    library.addIcons(faTachometerAlt);
+    library.addIcons(faHeart);
+    library.addIcons(faList);
+    library.addIcons(faBell);
+    library.addIcons(faTasks);
+    library.addIcons(faBook);
+    library.addIcons(faHdd);
+    library.addIcons(faFlag);
+    library.addIcons(faWrench);
+    library.addIcons(faLock);
+    library.addIcons(faCloud);
+    library.addIcons(faSignOutAlt);
+    library.addIcons(faSignInAlt);
+    library.addIcons(faCalendarAlt);
+    library.addIcons(faSearch);
+    library.addIcons(faTrashAlt);
+    library.addIcons(faAsterisk);
   }
 }
