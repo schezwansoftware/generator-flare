@@ -70,8 +70,9 @@ export class UserService {
       existingUser.firstName = userDTO.firstName;
       existingUser.lastName = userDTO.lastName;
       existingUser.email = userDTO.email;
-      existingUser.activated = userDTO.activated;
-      existingUser.authorities = userDTO.authorities.map(name => ({name}));
+      existingUser.activated = userDTO.activated;<% if (dbType === 'mysql') {%>
+      existingUser.authorities = userDTO.authorities.map(name => ({name}));<%}%><% if (dbType === 'mongodb') {%>
+      existingUser.authorities = userDTO.authorities;<%}%>
       existingUser = await this.userRepository.update(existingUser);
       return this.userMapper.mapUserToUserDTO(existingUser);
     }

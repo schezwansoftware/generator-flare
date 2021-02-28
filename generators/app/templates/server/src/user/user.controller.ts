@@ -22,7 +22,7 @@ export class UserController {
         });
     }
 
-    // add a user
+    // update a user
     @Put('/users')
     async updateUser(@Res() res, @Body() userDTO: UserDTO) {
         if (!userDTO.id) {
@@ -38,14 +38,14 @@ export class UserController {
         });
     }
 
-    // add a user
+    // get all users
     @Get('/users')
     async getAllManagedUsers(@Res() res) {
         const result = await this.userService.findAllManagedUsers();
         return res.status(HttpStatus.OK).json({result});
     }
 <% if (dbType === 'mongodb') {%>
-    // add a user
+    // get a user
     @Get('/users/:id')
     async getUser(@Res() res, @Param('id') id: string) {
         if (id && mongoose.Types.ObjectId.isValid(id)) {
@@ -55,7 +55,7 @@ export class UserController {
         throw new BadRequestException('Invalid id.');
     }
 
-    // add a user
+    // delete a user
     @Delete('/users/:id')
     async deleteUser(@Res() res, @Param('id') id: string) {
         if (id && mongoose.Types.ObjectId.isValid(id)) {
@@ -65,7 +65,7 @@ export class UserController {
         throw new BadRequestException('Invalid id.');
     }
 <%}%><% if (dbType === 'mysql') {%>
-    // add a user
+    // get a user
     @Get('/users/:id')
     async getUser(@Res() res, @Param('id') id: number) {
         if (id) {
@@ -75,7 +75,7 @@ export class UserController {
         throw new BadRequestException('Invalid id.');
     }
 
-    // add a user
+    // delete a user
     @Delete('/users/:id')
     async deleteUser(@Res() res, @Param('id') id: number) {
         if (id) {

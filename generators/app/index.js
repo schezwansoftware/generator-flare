@@ -203,7 +203,7 @@ module.exports = class extends Generator {
       command = command + '&& cd ../client && yarn install && yarn build';
     }
     shelljs.exec(command);
-    const gitCommand = 'git init && git add --all && git commit -m "initial application generated using flare:0.1.0"'
+    const gitCommand = `git init && git add --all && git commit -m "initial application generated using flare: ${packagejs.version}"`
     shelljs.exec(gitCommand);
     done();
   }
