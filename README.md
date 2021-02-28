@@ -32,6 +32,18 @@ Then generate your new project:
 yo flare
 ```
 
+**Updates in new Version (0.3.0)**
+- [ ] SQL support enabled
+- [ ] Create a microservice/Full Stack application with Mysql as backend.
+- [ ] Generate Entities and Add relationships with support  from TypeORM.
+
+**TO DO (0.3.1)**
+- [ ] On Delete Entity, record gets removed from database but not from the page.
+- [ ] On update email issue token gets invalidated.
+- [ ] On Edit date doesn't get loaded to input.
+- [ ] Migration of initial users and roles for mongodb and mysql.
+
+
 ## Getting To Know Yeoman
 
  * Yeoman has a heart of gold.
