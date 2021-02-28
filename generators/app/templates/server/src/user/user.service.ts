@@ -57,19 +57,23 @@ export class UserService {
   }
 
   async updateUser(userDTO: UserDTO): Promise<UserDTO> {
-    if (SecurityUtils.getCurrentUserLoggedIn() && SecurityUtils.getCurrentUserLoggedIn().id) {
-      const existingUser: IUser = await this.userRepository.findByEmail(userDTO.email);
-      if (existingUser && existingUser.id !== SecurityUtils.getCurrentUserLoggedIn().id) {
-        throw new BadRequestException('Email Already exists.');
-      }
-      let currentUser = await this.userRepository.findById(SecurityUtils.getCurrentUserLoggedIn().id);
-      if (currentUser) {
-        currentUser.email = userDTO.email;
-        currentUser.firstName = userDTO.firstName;
-        currentUser.lastName = userDTO.lastName;
-        currentUser = await this.userRepository.update(currentUser);
-        return this.userMapper.mapUserToUserDTO(currentUser);
-      }
+    let existingUser = await this.userRepository.findByEmail(userDTO.email);
+    if (existingUser && existingUser.id !== userDTO.id) {
+      throw new BadRequestException('A User is already registered with this email.');
+    }
+    existingUser = await this.userRepository.findByLogin(userDTO.login);
+    if (existingUser && existingUser.id !== userDTO.id) {
+      throw new BadRequestException('A User is already registered with this login.');
+    }
+    existingUser = await this.userRepository.findById(userDTO.id);
+    if (existingUser) {
+      existingUser.firstName = userDTO.firstName;
+      existingUser.lastName = userDTO.lastName;
+      existingUser.email = userDTO.email;
+      existingUser.activated = userDTO.activated;
+      existingUser.authorities = userDTO.authorities.map(name => ({name}));
+      existingUser = await this.userRepository.update(existingUser);
+      return this.userMapper.mapUserToUserDTO(existingUser);
     }
     throw new BadRequestException('Invalid id.');
   }
